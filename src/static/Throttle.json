@@ -1,0 +1,6 @@
+{
+    "session_type": "capture",
+    "device_address": "9B061FFAZ00236@dev-us-pao-5-proxy-7-lin.headspin.io",
+    "network_shaping": {"up": 1, "down": 1},
+    "mitm_ignore": [".*"]
+}
