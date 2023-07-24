@@ -42,6 +42,13 @@ async function invokeAgentPostCall(url, body) {
 }
 
 
+/**
+ * @author: sasikumar bharanikumar
+ * @param {*} url 
+ * @param {*} body 
+ * @returns 
+ */
+
 async function httpsInvoke(options = {}) {
     const {
         method,
@@ -115,6 +122,12 @@ function traversal(arr, node) {
     arr = arr.slice(0, -1);
 }
 
+/**
+ * @author: sasikumar bharanikumar
+ * @param {*} url 
+ * @param {*} body 
+ * @returns 
+ */
 async function getDeviceAddress(deviceID)
 {
     var responsebody;
@@ -331,6 +344,12 @@ async function analyticsBuilder()
 
 }
 
+/**
+ * @author: sasikumar bharanikumar
+ * @param {*} url 
+ * @param {*} body 
+ * @returns 
+ */
 async function footer()
 {
     const footer = "</body>"+
@@ -338,6 +357,14 @@ async function footer()
 
                    return footer;
 }
+
+
+/**
+ * @author: sasikumar bharanikumar
+ * @param {*} url 
+ * @param {*} body 
+ * @returns 
+ */
 
 async function tableBody()
 {
@@ -358,7 +385,12 @@ async function tableBody()
                     // "<td>"++"</td>"
 }
 
-
+/**
+ * @author: sasikumar bharanikumar
+ * @param {*} url 
+ * @param {*} body 
+ * @returns 
+ */
 async function generateHTML(sessionTag,sessionTag1)
 {
 
