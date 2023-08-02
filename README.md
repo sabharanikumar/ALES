@@ -11,7 +11,7 @@ npm i && npm run start:dev
 
 | Platform      | CUJ → API(Path)                              | Prod Max (JULY 14th) | Stage Max (JULY 14th) |
 | ------------- | -------------------------------------------- | -------------------- | --------------------  |
-| `WEB`         | App Launch → token?realm=bolt                | `4250`               |      `1740`           |
+| `WEB`         | App Launch → token?realm=bolt                | <span style="color: red;">`4250`</span>               |      `1740`           |
 | `WEB`         | App Launch → cms/collections/mobile-menu-bar | `1830`               |         `1251`        |
 | `WEB`         | App Launch → /cms/configs/auth               | `4335`               |        `116`          |
 | `WEB`         | App Launch → users/me                        | `1554`               |        `1184`         |
