@@ -1,5 +1,5 @@
 # ALES
-This tool will help us to get API level analysis.
+This tool will help us to get API level latency for all CUJ's.
 # Start Server:
 ~ npm i && npm run start:dev ~
 
