@@ -9,14 +9,6 @@ npm i && npm run start:dev
 
 # Output:
 
-| Platform      | CUJ → API(Path)      | Prod Max (JULY 14th) | Stage Max (JULY 14th) |
-| ------------- | -------------------- | --------             | --------------------  |
-| `WEB`        | Test1                | `NewYork`            |                        |
-| `WEB`         | Test2                | `Toronto`            |                       |
-
-
-
-
 | Platform      | CUJ → API(Path)                              | Prod Max (JULY 14th) | Stage Max (JULY 14th) |
 | ------------- | -------------------------------------------- | -------------------- | --------------------  |
 | `WEB`         | App Launch → token?realm=bolt                | `4250`               |      `1740`           |
@@ -25,5 +17,3 @@ npm i && npm run start:dev
 | `WEB`         | App Launch → users/me                        | `1554`               |        `1184`         |
 | `WEB`         | App Launch → cms/config/gi-web-sdk-config    | `989`                |         `989`         |
 | `WEB`         | App Launch → /cms/collections/web-footer     | `4229`               |         `207`         |
-
-
