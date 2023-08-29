@@ -228,7 +228,7 @@
         {
             "id":46,
             "category":"DetailPage_VST",
-            "Expectedapi":" /cms/routes/show"
+            "Expectedapi":"/cms/routes/show"
         },
         {
             "id":47,
@@ -239,6 +239,26 @@
             "id":48,
             "category":"DetailPage_VST",
             "Expectedapi":"/cms/recommendations/nextVideos"
+        },
+        {
+            "id":49,
+            "category":"Home_NewsTab",
+            "Expectedapi":"/cms/routes/news"
+        },
+        {
+            "id":50,
+            "category":"Home_NewsTab",
+            "Expectedapi":"/cms/routes/video/watch/"
+        },
+        {
+            "id":51,
+            "category":"NewsTab_VideoPlayback",
+            "Expectedapi":"/cms/recommendations/nextVideos"
+        },
+        {
+            "id":52,
+            "category":"NewsTab_VideoPlayback",
+            "Expectedapi":"/playback-orchestrator/any/playback-orchestrator/v1/playbackInfo"
         }
     ]
 }

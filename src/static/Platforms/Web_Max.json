@@ -294,6 +294,36 @@
             "id":45,
             "category":"DetailPage_VST",
             "Expectedapi":"/cms/recommendations/nextVideos"
+        },
+        {
+            "id":46,
+            "category":"Home_NewsTab",
+            "Expectedapi":"/cms/routes/news"
+        },
+        {
+            "id":47,
+            "category":"Home_NewsTab",
+            "Expectedapi":"/cms/collections/news-page-immersive-hero"
+        },
+        {
+            "id":48,
+            "category":"Home_NewsTab",
+            "Expectedapi":"/cms/collections/home-page-inline-hero-live-news"
+        },
+        {
+            "id":49,
+            "category":"NewsTab_VideoPlayback",
+            "Expectedapi":"cms/routes/video/watch"
+        },
+        {
+            "id":50,
+            "category":"NewsTab_VideoPlayback",
+            "Expectedapi":"any/playback/v1/playbackInfo"
+        },
+        {
+            "id":51,
+            "category":"NewsTab_VideoPlayback",
+            "Expectedapi":"/cms/recommendations/nextVideos"
         }
     ]
 }

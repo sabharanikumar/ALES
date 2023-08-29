@@ -442,9 +442,7 @@ async function generateHTML(sessionTag,sessionTag1)
 
         for(let i =0;i<json.CUJ.length;i++)
               {
-                console.log(json.CUJ[i].Expectedapi+" TEST************");
-
-                const temp = json.CUJ[i].Expectedapi.valueOf().trim();
+               const temp = json.CUJ[i].Expectedapi.valueOf().trim();
                await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](5000);
               // console.log(response+" RESPONSE +++++++++++");
 
@@ -454,9 +452,6 @@ async function generateHTML(sessionTag,sessionTag1)
 
                     if(temp2.includes(temp))
                     {
-                      console.log("Entered into IF...");
-                      console.log(data.URL);
-                      console.log(data.Duration);
 
                       if (myMap.has(temp+":::"+json.CUJ[i].category.valueOf().trim())) {
                         // Key already exists, check value
@@ -464,10 +459,10 @@ async function generateHTML(sessionTag,sessionTag1)
                           // Override key with new value
                            myMap.set(temp+":::"+json.CUJ[i].category.valueOf().trim(), parseInt(data.Duration));
                         }
-                        else
+                       /* else
                         {
                           console.log(myMap.get(temp+":::"+json.CUJ[i].category.valueOf().trim()) +" HIGHER NUMBER")
-                        }
+                        }*/
                       } else {
                         // Key doesn't exist, add it to the map
                          myMap.set(temp+":::"+json.CUJ[i].category.valueOf().trim(), parseInt(data.Duration));
@@ -496,20 +491,16 @@ async function generateHTML(sessionTag,sessionTag1)
                const temp2 = data.URL;
                   if(temp2.includes(temp))
                   {
-                    console.log("Entered into IF...");
-                    console.log(data.URL);
-                    console.log(data.Duration);
-
                     if (myMap1.has(temp+":::"+json.CUJ[i].category.valueOf().trim())) {
                       // Key already exists, check value
                       if ( myMap1.get(temp+":::"+json.CUJ[i].category.valueOf().trim()) < parseInt(data.Duration)) {
                         // Override key with new value
                          myMap1.set(temp+":::"+json.CUJ[i].category.valueOf().trim(), parseInt(data.Duration));
                       }
-                      else
+                     /* else
                       {
                         console.log(myMap1.get(temp+":::"+json.CUJ[i].category.valueOf().trim()) +" HIGHER NUMBER")
-                      }
+                      }*/
                     } else {
                       // Key doesn't exist, add it to the map
                        myMap1.set(temp+":::"+json.CUJ[i].category.valueOf().trim(), parseInt(data.Duration));

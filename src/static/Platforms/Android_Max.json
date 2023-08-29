@@ -224,6 +224,36 @@
             "id":45,
             "category":"DetailPage_VST",
             "Expectedapi":"/cms/recommendations/nextVideos"
+        },
+        {
+            "id":46,
+            "category":"Home_NewsTab",
+            "Expectedapi":"/cms/routes/news"
+        },
+        {
+            "id":47,
+            "category":"Home_NewsTab",
+            "Expectedapi":"labs/api/v1/feature-flags/decision"
+        },
+        {
+            "id":48,
+            "category":"NewsTab_VideoPlayback",
+            "Expectedapi":"/cms/routes/video/watch"
+        },
+        {
+            "id":49,
+            "category":"NewsTab_VideoPlayback",
+            "Expectedapi":"/users/me/customAttributes/player-android-mobile_PROFILEID"
+        },
+        {
+            "id":50,
+            "category":"NewsTab_VideoPlayback",
+            "Expectedapi":"/cms/recommendations/nextVideos"
+        },
+        {
+            "id":51,
+            "category":"NewsTab_VideoPlayback",
+            "Expectedapi":"/playback-orchestrator/any/playback-orchestrator/v1/playbackInfo"
         }
     ]
 }
