@@ -2,66 +2,81 @@
     "CUJ":[
         {
             "id":1,
-            "category":"AppLaunch",
-            "Expectedapi":"token?realm=bolt"
+            "category":"appLaunch",
+            "Expectedapi":"/token?realm=bolt"
         },
         {
             "id":2,
-            "category":"AppLaunch",
-            "Expectedapi":" session-context/headwaiter/v1/bootstrap"
+            "category":"appLaunch",
+            "Expectedapi":"/downloads-manager/any/downloads-manager/v1/user/downloads/active"
         },
         {
             "id":3,
-            "category":"AppLaunch",
-            "Expectedapi":"labs/api/v1/feature-flags/decision"
+            "category":"appLaunch",
+            "Expectedapi":"/session-context/headwaiter/v1/bootstrap"
         },
         {
             "id":4,
-            "category":"AppLaunch",
-            "Expectedapi":"labs/api/v1/sessions/feature-flags/decisions"
+            "category":"appLaunch",
+            "Expectedapi":"/entitlements/userEntitlementsSummary/me"
         },
         {
             "id":5,
             "category":"AppLaunch",
-            "Expectedapi":"cms/configs/gi-sdk-config"
+            "Expectedapi":"/labs/api/v1/feature-flags/decision"
         },
         {
             "id":6,
-            "category":"AppLaunch",
-            "Expectedapi":"cms/collections/mobile-menu-bar"
+            "category":"appLaunch",
+            "Expectedapi":"/labs/api/v1/sessions/feature-flags/decisions"
         },
         {
             "id":7,
-            "category":"AppLaunch",
-            "Expectedapi":"users/me"
+            "category":"appLaunch",
+            "Expectedapi":"/users/me/partners"
         },
         {
             "id":8,
-            "category":"AppLaunch",
-            "Expectedapi":"cms/configs/geoblock"
+            "category":"appLaunch",
+            "Expectedapi":"/cms/configs/gi-sdk-config"
         },
         {
             "id":9,
-            "category":"AppLaunch_CDN",
-            "Expectedapi":"2F6464c054-300e-4800-815f-84e63545ca8c.png"
+            "category":"appLaunch",
+            "Expectedapi":"/cms/collections/mobile-menu-bar"
         },
         {
             "id":10,
-            "category":"AppLaunch_CDN",
-            "Expectedapi":"2F4eaf42a9-1e6e-431e-a663-7057c93b9a2e.png"
+            "category":"appLaunch",
+            "Expectedapi":"/users/me"
         },
         {
             "id":11,
-            "category":"AppLaunch",
-            "Expectedapi":" /legal/region"
+            "category":"appLaunch",
+            "Expectedapi":"/cms/configs/geoblock"
         },
         {
             "id":12,
-            "category":"AppLaunch",
-            "Expectedapi":" /legal/terms"
+            "category":"appLaunch",
+            "Expectedapi":"2F6464c054-300e-4800-815f-84e63545ca8c.png"
         },
         {
             "id":13,
+            "category":"appLaunch",
+            "Expectedapi":"2F4eaf42a9-1e6e-431e-a663-7057c93b9a2e.png"
+        },
+        {
+            "id":14,
+            "category":"appLaunch",
+            "Expectedapi":"/legal/region"
+        },
+        {
+            "id":15,
+            "category":"AppLaunch",
+            "Expectedapi":"/legal/terms"
+        },
+        {
+            "id":16,
             "category":"Signin_ProfilePage_CDN",
             "Expectedapi":"/login"
         },
