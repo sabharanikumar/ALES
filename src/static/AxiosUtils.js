@@ -52,6 +52,9 @@ async function generateHTML1(rData1, label) {
 
   const test = JSON.stringify(label);
 
+
+  console.log("IT's the session ID:    *********** ",test)
+
   // Your maximum progress value
   const maxValue = 500;
 
@@ -166,7 +169,7 @@ overflow: hidden;
             <tr>
               <th>Flow</th>
               <th>End Point</th>
-              <th>Latency `+ { test } + `</th>
+              <th>Latency `+ test + `</th>
             </tr>
           </thead>
           <tbody>
@@ -338,7 +341,7 @@ overflow: hidden;
             <tr>
               <th>Flow</th>
               <th>End Point</th>
-              <th>Latency `+ { test } + `</th>
+              <th>Latency `+test+ `</th>
             </tr>
           </thead>
           <tbody>
@@ -856,7 +859,7 @@ async function generateHTML(sessionTag, sessionTag1) {
       if (parseInt(key) > start && endTime < end) {
         if (url.includes('discomax') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN')) {
           count++;
-          rData1.set(count, "Flow ::: " + flow + " ::: " + url + " endpoint ::: Latency " + duration);
+          rData1.set(count, "Flow ::: " + flow + " ::: " + url + ":::" + duration);
         }
       }
     }
@@ -876,7 +879,7 @@ async function generateHTML(sessionTag, sessionTag1) {
       if (parseInt(key) > start && endTime < end) {
         if (url.includes('discomax') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN')) {
           count2++;
-          rData2.set(count2, "Flow ::: " + flow + " ::: " + url + " endpoint ::: Latency " + duration);
+          rData2.set(count2, "Flow ::: " + flow + " ::: " + url + ":::" + duration);
         }
       }
     }
