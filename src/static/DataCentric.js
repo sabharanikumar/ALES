@@ -11,6 +11,15 @@ class MapWithOrderedKeys {
         this.map.set(key, value);
     }
 
+    set1(key, value) {
+        if (this.map.has(key)) {
+            this.map.set(key, parseInt(this.map.get(key)) + parseInt(value));
+        } else {
+            this.keys.push(key);
+            this.map.set(key, parseInt(value));
+        }
+    }
+
     get(key) {
         return this.map.get(key);
     }

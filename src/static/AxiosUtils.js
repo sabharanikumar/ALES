@@ -5,7 +5,7 @@ const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 var Regex = require("regex");
 const list = [];
 const MapWithOrderedKeys = require("./DataCentric");
-const throttle = require("./Throttle.json")
+const throttle = require("./Throttle.json");
 const lock = require("./LockDevice.json");
 const json = require('./Platforms/IOS_Max.json');
 const fs = require('fs');
@@ -14,8 +14,11 @@ const JSONStream = require('JSONStream');
 const session = require('express-session');
 const { type } = require('express/lib/response');
 const { Console } = require('console');
+const { start } = require('repl');
+const myMapResult = new Map();
 let myMap = new Map();
 let myMap1 = new Map();
+let myMap3 = new Map();
 let login = 0, search = 0, videoPlayback = 0, adVidePlayback = 0, createProfile = 0;
 
 /**
@@ -43,128 +46,157 @@ async function invokeAgentPostCall(url, body) {
 }
 
 
+/**
+ * @author: sasikumar bharanikumar
+ * @param {*} url 
+ * @param {*} body 
+ * @returns 
+ */
+function mapToArray(dataMap) {
+  var dataArray = [['CUJ', 'Latency']];
+  for (var key in dataMap) {
+    if (dataMap.hasOwnProperty(key)) {
+      dataArray.push([key, dataMap[key]]);
+    }
+  }
+  return dataArray;
+}
+
+
 function calculatePercentage(value, maxValue) {
   return (value / maxValue) * 100;
 }
 
-async function generateHTML1(rData1, label) {
+
+/**
+ * @author: sasikumar bharanikumar
+ * @param {*} url 
+ * @param {*} body 
+ * @returns 
+ */
+async function generateHTML1(rData1, label, rData2) {
   // Your Map data
 
   const test = JSON.stringify(label);
 
-
-  console.log("IT's the session ID:    *********** ",test)
-
   // Your maximum progress value
   const maxValue = 500;
 
-  // Start building the HTML content
-  let htmlContent = `
-    
-    <!DOCTYPE html>
+    let htmlContent = `<!DOCTYPE html>
     <html lang="en">
     <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Dynamic Table</title>
       <style>
-      body {
+        body {
           font-family: Arial, sans-serif;
-          margin: 0;
-          padding: 0;
-          background-color: #f4f4f4;
+          line-height: 1.6;
+          color: #333;
+          margin: 20px;
         }
-
         table {
           width: 100%;
           max-width: 100%;
+          margin: 0 auto;
+          font-size: 18px;
+          border-collapse: collapse;
         }
-
-        .table-container {
-max-width: 100%;
-overflow-x: auto;
-margin: 50px auto;
-background-color: white;
-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-border-radius: 8px;
-overflow: hidden;
-}
-        
-        
-        table { 
-          margin-left: auto; 
-          margin-right: auto; 
-          font-size: 20px; 
-          height: 100%; 
-          table-layout: fixed; 
-      } 
-
-      td { 
-          border: 1px solid black; 
-          text-align: center; 
-          padding: 10px; 
-      } 
-        
+    
         th, td {
+          border: 1px solid #ddd;
           padding: 15px;
           text-align: left;
-          border-bottom: 1px solid #ddd;
-          word-wrap: break-word;
+          word-wrap: break-word; /* Allow text to break into the next line */
+          max-width: 200px; /* Set your desired max-width for the table cells */
+          overflow: hidden;
         }
-        
+    
         th {
           background-color: #f2f2f2;
         }
-        
+    
         tbody tr:hover {
           background-color: #f5f5f5;
         }
-        
-        @media only screen and (max-width: 600px) {
-          /* Add styles for smaller screens */
-          th, td {
-            padding: 10px;
-          }
+    
+        .chart-container {
+          text-align: center;
+          margin-top: 10px;
         }
-        
-        .progress-bar-container {
-          position: relative;
-          width: 100%;
-          height: 20px;
-          background-color: #e0e0e0;
-          border-radius: 4px;
-          overflow: hidden;
-        }
-        
-        .progress-bar {
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 100%;
-          background-color: #4caf50;
-          transition: width 0.3s ease;
-        }
-        
-        .tooltip {
-          position: absolute;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          background-color: #333;
-          color: #fff;
-          padding: 5px;
-          border-radius: 4px;
-          display: none;
-        }
-        
-        .progress-bar-container:hover .tooltip {
-          display: block;
+    
+        .chart {
+          width: 400px;
+          height: 300px;
+          display: inline-block;
+          margin: 10px;
         }
       </style>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Dynamic Google Pie Charts</title>
+      <!-- Load Google Charts API -->
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawCharts);
+        function drawCharts() {`;
+
+    const data2 = new Map(rData2);
+    var dataMap1 = {};
+    var dataMap2 = {};
+    var dataMap3 = {};
+
+     data2.forEach((value,key)=>{
+      let result = value;
+      let serverSide = parseInt(result.split(":::")[2]);
+      let cuj = result.split(":::")[0];
+      let latency = parseInt(result.split(":::")[1]);
+      serverSide = Math.abs(serverSide);
+      if(serverSide > latency)
+      {
+        let temp = serverSide;
+        serverSide = latency;
+        latency = temp;
+      }
+    let clientSide = latency - serverSide;
+      dataMap1[cuj.toString()] = latency;
+      dataMap2[cuj.toString()] = clientSide;
+      dataMap3[cuj.toString()] = serverSide;
+     });
+
+     var chartData11 = mapToArray(dataMap1);
+     var chartData21 = mapToArray(dataMap2);
+     var chartData31 = mapToArray(dataMap3);
+
+     var chartData11String = JSON.stringify(chartData11);
+     var chartData21String = JSON.stringify(chartData21);
+     var chartData31String = JSON.stringify(chartData31);
+
+    chartData11String = chartData11String.slice(1, -1);
+    chartData21String = chartData21String.slice(1, -1);
+    chartData31String = chartData31String.slice(1, -1);
+
+        htmlContent += 
+         `var chart1 = new google.visualization.PieChart(document.getElementById('chart1'));
+          var chart2 = new google.visualization.PieChart(document.getElementById('chart2'));
+          var chart3 = new google.visualization.PieChart(document.getElementById('chart3'));
+
+          chart1.draw(google.visualization.arrayToDataTable([${chartData11String}]), { title: 'OverAll Latency',});
+          chart2.draw(google.visualization.arrayToDataTable([${chartData21String}]), {title: 'ClientSide Latency'});
+          chart3.draw(google.visualization.arrayToDataTable([${chartData31String}]), {title: 'ServerSide Latency'});
+         
+        }
+      </script>
     </head>
     <body>
-      <div class="table-container">
-        <table id="dynamic-table">
+    <h2 style="text-align: center;"> CX PERFORMANCE ANALYSIS REPORT</h2>
+    <!-- Upper part with three dynamic Google Pie Charts -->
+    <div class="chart-container">
+      <div id="chart1" class="chart"></div>
+      <div id="chart2" class="chart"></div>
+      <div id="chart3" class="chart"></div>
+    </div>`;
+  htmlContent += `
+    <div id="table2" class="table-container">
+        <table id="dynamic-table2">
           <thead>
             <tr>
               <th>Flow</th>
@@ -173,10 +205,7 @@ overflow: hidden;
             </tr>
           </thead>
           <tbody>
-    `;
-
-  // Iterate over the keys of the map and add rows to the HTML content
-
+    `; 
   const data1 = new Map(rData1);
 
   for (let i = 1; i < data1.size; i++) {
@@ -211,187 +240,14 @@ overflow: hidden;
         </tr>
       `;
   }
-
-  // Complete the HTML content
   htmlContent += `
-            </tbody>
-          </table>
-        </div>
-      </body>
-      </html>
-    `;
+  </tbody>
+</table>
+</div>
+</body>
+</html>
+`;
   return htmlContent;
-}
-
-
-async function generateHTML2(rData, label) {
-  // Your Map data
-  let test = JSON.stringify(label);
-
-  // Your maximum progress value
-  const maxValue = 500;
-
-  // Start building the HTML content
-  let htmlContent = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Dynamic Table</title>
-      <style>
-      body {
-          font-family: Arial, sans-serif;
-          margin: 0;
-          padding: 0;
-          background-color: #f4f4f4;
-        }
-
-        table {
-          width: 100%;
-          max-width: 100%;
-        }
-
-        .table-container {
-max-width: 100%;
-overflow-x: auto;
-margin: 50px auto;
-background-color: white;
-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-border-radius: 8px;
-overflow: hidden;
-}
-        
-        
-        table { 
-          margin-left: auto; 
-          margin-right: auto; 
-          font-size: 20px; 
-          height: 100%; 
-          table-layout: fixed; 
-      } 
-
-      td { 
-          border: 1px solid black; 
-          text-align: center; 
-          padding: 10px; 
-      } 
-        
-        th, td {
-          padding: 15px;
-          text-align: left;
-          border-bottom: 1px solid #ddd;
-          word-wrap: break-word;
-        }
-        
-        th {
-          background-color: #f2f2f2;
-        }
-        
-        tbody tr:hover {
-          background-color: #f5f5f5;
-        }
-        
-        @media only screen and (max-width: 600px) {
-          /* Add styles for smaller screens */
-          th, td {
-            padding: 10px;
-          }
-        }
-        
-        .progress-bar-container {
-          position: relative;
-          width: 100%;
-          height: 20px;
-          background-color: #e0e0e0;
-          border-radius: 4px;
-          overflow: hidden;
-        }
-        
-        .progress-bar {
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 100%;
-          background-color: #4caf50;
-          transition: width 0.3s ease;
-        }
-        
-        .tooltip {
-          position: absolute;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          background-color: #333;
-          color: #fff;
-          padding: 5px;
-          border-radius: 4px;
-          display: none;
-        }
-        
-        .progress-bar-container:hover .tooltip {
-          display: block;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="table-container">
-        <table id="dynamic-table">
-          <thead>
-            <tr>
-              <th>Flow</th>
-              <th>End Point</th>
-              <th>Latency `+test+ `</th>
-            </tr>
-          </thead>
-          <tbody>
-    `;
-
-  // Iterate over the keys of the map and add rows to the HTML content
-
-  const data = new Map(rData);
-  for (let i = 1; i < data.size; i++) {
-    let valueMap1;
-    let flow;
-    let url;
-    let latency;
-
-    if (typeof data.get(i) !== 'undefined') {
-      valueMap1 = data.get(i);
-    }
-
-    if (typeof valueMap1.split(":::")[1] !== 'undefined') {
-      flow = valueMap1.split(":::")[1];
-    }
-
-    if (typeof valueMap1.split(":::")[2] !== 'undefined') {
-      url = valueMap1.split(":::")[2]
-    }
-
-
-    if (typeof valueMap1.split(":::")[3] !== 'undefined') {
-      latency = valueMap1.split(":::")[3]
-    }
-
-    htmlContent += `
-        <tr>
-          <td>${flow}</td>
-          <td>${url}</td>
-          <td>${latency}</td>
-        </tr>
-      `;
-  }
-  // Complete the HTML content
-  htmlContent += `
-            </tbody>
-          </table>
-        </div>
-      </body>
-      </html>
-    `;
-
-  return htmlContent;
-
 }
 
 /**
@@ -500,7 +356,6 @@ async function getDeviceAddress(deviceID) {
   }
   return deviceAddress;
 }
-
 
 /**
  * @author: sasikumar bharanikumar
@@ -778,6 +633,54 @@ async function processCSVD() {
   }
 }
 
+async function overAllLatencyInCUJ(sessionId)
+{
+  const url = "https://ff60cdf18dc841559ada504885bc6118@api-dev.headspin.io/v0/sessions/analysis/pageloadtime/" + sessionId;
+  let json1 = await getCUJDetails(sessionId);
+  const dataMap = new MapWithOrderedKeys();
+  for (let i = 0; i < json1.page_load_regions.length; i++) {
+    const region = json1.page_load_regions[i];
+    const key = region.request_name.trim();
+    const startTime = region.start_time;
+    const endTime = region.end_time;
+    const final = endTime - startTime;
+    const value = final;
+    dataMap.set(key, value);
+  }
+  return dataMap;
+}
+
+async function getClientSideLatencyInSeconds(map1, map2)
+{
+  const rData4 = new MapWithOrderedKeys();
+
+  map1.forEach((value,key)=>{
+     if(map2.has(key))
+     {
+       const getLatency = parseInt(value) - parseInt(map2.get(key));
+       rData4.set(key,getLatency);
+     }
+  })
+  return rData4;
+}
+
+
+async function getConsolidateLatency(map1, map2)
+{
+   const rData5 = new MapWithOrderedKeys();
+   map1.forEach((value,key)=>{
+      let flow = key;
+      let latency = value;
+      map2.forEach((value,key)=>{
+        if(key.includes(flow))
+        {
+          rData5.set(flow, flow+":::"+latency+":::"+value);
+        }
+      });
+   });
+   return rData5;
+}
+
 /**
  * @author: sasikumar bharanikumar
  * @param {*} url 
@@ -787,6 +690,8 @@ async function processCSVD() {
 async function generateHTML(sessionTag, sessionTag1) {
   const session1 = await getCUJDetails(sessionTag);
   const session2 = await getCUJDetails(sessionTag1);
+  const seconds1 = await overAllLatencyInCUJ(sessionTag);
+  const seconds2 = await overAllLatencyInCUJ(sessionTag1);
 
   const map = await extractData(session1);
   const map2 = await extractData(session2);
@@ -798,9 +703,6 @@ async function generateHTML(sessionTag, sessionTag1) {
   let url = "https://ff60cdf18dc841559ada504885bc6118@api-dev.headspin.io/v0/sessions/" + `${sessionTag}` + ".csv";
 
   let url1 = "https://ff60cdf18dc841559ada504885bc6118@api-dev.headspin.io/v0/sessions/" + `${sessionTag1}` + ".csv";
-
-  console.log(" SESSION URL Stage:::::::::::::: " + url);
-  console.log(" SESSION URL Prod :::::::::::::: " + url1);
 
   let response;
   let response1;
@@ -842,6 +744,8 @@ async function generateHTML(sessionTag, sessionTag1) {
 
   const rData1 = new MapWithOrderedKeys();
   const rData2 = new MapWithOrderedKeys();
+  const rData3 = new MapWithOrderedKeys();
+  const rData4 = new MapWithOrderedKeys();
 
   const tmap = new Map(mp);
   const tmap1 = new Map(mp1);
@@ -857,15 +761,15 @@ async function generateHTML(sessionTag, sessionTag1) {
       let url = value.split(":::")[1];
       let duration = value.split(":::")[2];
       if (parseInt(key) > start && endTime < end) {
-        if (url.includes('discomax') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN')) {
+        if ((url.includes('discomax') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN'))  && !url.includes('events')) {
           count++;
           rData1.set(count, "Flow ::: " + flow + " ::: " + url + ":::" + duration);
+          rData3.set1(flow,duration);
         }
       }
     }
   }
 
-  await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](15000);
   let count2 = 0;
   for (let [key, value] of map2) {
     let array = value.split(':');
@@ -877,16 +781,25 @@ async function generateHTML(sessionTag, sessionTag1) {
       let url = value.split(":::")[1];
       let duration = value.split(":::")[2];
       if (parseInt(key) > start && endTime < end) {
-        if (url.includes('discomax') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN')) {
+        if ((url.includes('discomax') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN'))  && !url.includes('events')) {
           count2++;
           rData2.set(count2, "Flow ::: " + flow + " ::: " + url + ":::" + duration);
+          rData4.set1(flow,duration);
         }
       }
     }
   }
+    
+  const result = await getClientSideLatencyInSeconds(new Map(seconds1),new Map(rData3));
+  const result1 = await getClientSideLatencyInSeconds(new Map(seconds2),new Map(rData4));
 
-  fs.writeFileSync('output1.html', await generateHTML1(rData1, sessionTag), 'utf-8');
-  fs.writeFileSync('output2.html', await generateHTML2(rData2, sessionTag1), 'utf-8');
+  const fResult = await getConsolidateLatency(new Map(seconds1),new Map(result));
+  const fResult1 = await getConsolidateLatency(new Map(seconds2),new Map(result1));
+  
+  fs.writeFileSync('output1.html', await generateHTML1(rData1, sessionTag,fResult), 'utf-8');
+  fs.writeFileSync('output2.html', await generateHTML1(rData2, sessionTag1,fResult1), 'utf-8');
+
+  console.log("***** The execution is completed. Please check the output1.html and output2.html files for result *****");
   //await analyticsBuilder();
   return myMap;
 }
