@@ -761,7 +761,7 @@ async function generateHTML(sessionTag, sessionTag1) {
       let url = value.split(":::")[1];
       let duration = value.split(":::")[2];
       if (parseInt(key) > start && endTime < end) {
-        if ((url.includes('discomax') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN'))  && !url.includes('events')) {
+        if ((url.includes('discomax') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN'))  && !url.includes('events') && !url.includes('telegraph') &&!url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co')&& !url.includes('pug000')&& !url.includes('cdn.cookielaw')&&!url.includes('yahoo')) {
           count++;
           rData1.set(count, "Flow ::: " + flow + " ::: " + url + ":::" + duration);
           rData3.set1(flow,duration);
@@ -781,7 +781,7 @@ async function generateHTML(sessionTag, sessionTag1) {
       let url = value.split(":::")[1];
       let duration = value.split(":::")[2];
       if (parseInt(key) > start && endTime < end) {
-        if ((url.includes('discomax') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN'))  && !url.includes('events')) {
+        if ((url.includes('discomax') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN'))  && !url.includes('events') && !url.includes('telegraph') &&!url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co')&& !url.includes('pug000')&& !url.includes('cdn.cookielaw')&&!url.includes('yahoo')) {
           count2++;
           rData2.set(count2, "Flow ::: " + flow + " ::: " + url + ":::" + duration);
           rData4.set1(flow,duration);
