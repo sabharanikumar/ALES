@@ -15,6 +15,7 @@ const session = require('express-session');
 const { type } = require('express/lib/response');
 const { Console } = require('console');
 const { start } = require('repl');
+const { request } = require('http');
 const myMapResult = new Map();
 let myMap = new Map();
 let myMap1 = new Map();
@@ -201,7 +202,9 @@ async function generateHTML1(rData1, label, rData2) {
             <tr>
               <th>Flow</th>
               <th>End Point</th>
-              <th>Latency `+ test + `</th>
+              <th>Request Payload Size(Bytes)</th>
+              <th>Response Payload Size(Bytes)</th>
+              <th>Latency`+ test + `(ms)</th>
             </tr>
           </thead>
           <tbody>
@@ -214,6 +217,8 @@ async function generateHTML1(rData1, label, rData2) {
     let flow;
     let url;
     let latency;
+    let request;
+    let response;
 
     if (typeof data1.get(i) !== 'undefined') {
       valueMap1 = data1.get(i);
@@ -232,10 +237,20 @@ async function generateHTML1(rData1, label, rData2) {
       latency = valueMap1.split(":::")[3]
     }
 
+    if (typeof valueMap1.split(":::")[4] !== 'undefined') {
+      request = valueMap1.split(":::")[4]
+    }
+
+    if (typeof valueMap1.split(":::")[5] !== 'undefined') {
+      response = valueMap1.split(":::")[5]
+    }
+
     htmlContent += `
         <tr>
           <td>${flow}</td>
           <td>${url}</td>
+          <td>${request}</td>
+          <td>${response}</td>
           <td>${latency}</td>
         </tr>
       `;
@@ -610,7 +625,7 @@ async function processCSV() {
     const stream = fs.createReadStream('./output.csv').pipe(csv());
 
     for await (const data of stream) {
-      mapi1.set(data.Start, data.End + ":::" + data.URL + ":::" + data.Duration);
+      mapi1.set(data.Start, data.End + ":::" + data.URL + ":::" + data.Duration+ ":::"+ data['Request Size']+ ":::"+ data['Response Size']);
     }
     return mapi1;
   } catch (error) {
@@ -625,7 +640,7 @@ async function processCSVD() {
     const stream = fs.createReadStream('./output1.csv').pipe(csv());
 
     for await (const data of stream) {
-      mapi1.set(data.Start, data.End + ":::" + data.URL + ":::" + data.Duration);
+      mapi1.set(data.Start, data.End + ":::" + data.URL + ":::" + data.Duration+ ":::"+ data['Request Size']+ ":::"+ data['Response Size']);
     }
     return mapi1;
   } catch (error) {
@@ -760,10 +775,12 @@ async function generateHTML(sessionTag, sessionTag1) {
       let endTime = parseInt(value.split(":::")[0]);
       let url = value.split(":::")[1];
       let duration = value.split(":::")[2];
+      let requestSize = value.split(":::")[3];
+      let responseSize = value.split(":::")[4];
       if (parseInt(key) > start && endTime < end) {
         if ((url.includes('discomax') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN'))  && !url.includes('events') && !url.includes('telegraph') &&!url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co')&& !url.includes('pug000')&& !url.includes('cdn.cookielaw')&&!url.includes('yahoo')) {
           count++;
-          rData1.set(count, "Flow ::: " + flow + " ::: " + url + ":::" + duration);
+          rData1.set(count, "Flow ::: " + flow + " ::: " + url + ":::" + duration + ":::" + requestSize + ":::" + responseSize);
           rData3.set1(flow,duration);
         }
       }
@@ -780,10 +797,12 @@ async function generateHTML(sessionTag, sessionTag1) {
       let endTime = parseInt(value.split(":::")[0]);
       let url = value.split(":::")[1];
       let duration = value.split(":::")[2];
+      let requestSize = value.split(":::")[3];
+      let responseSize = value.split(":::")[4];
       if (parseInt(key) > start && endTime < end) {
         if ((url.includes('discomax') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN'))  && !url.includes('events') && !url.includes('telegraph') &&!url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co')&& !url.includes('pug000')&& !url.includes('cdn.cookielaw')&&!url.includes('yahoo')) {
           count2++;
-          rData2.set(count2, "Flow ::: " + flow + " ::: " + url + ":::" + duration);
+          rData2.set(count2, "Flow ::: " + flow + " ::: " + url + ":::" + duration + ":::" + requestSize + ":::" + responseSize);
           rData4.set1(flow,duration);
         }
       }
