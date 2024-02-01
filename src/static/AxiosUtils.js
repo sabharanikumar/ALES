@@ -129,6 +129,21 @@ async function generateHTML1(rData1, label, rData2) {
           display: inline-block;
           margin: 10px;
         }
+        .tab-container {
+          display: flex;
+          align-items: center;
+        }
+    
+        .tab {
+          cursor: pointer;
+          padding: 10px;
+          border: 1px solid #ddd;
+        }
+    
+        .tab:hover,
+        .tab.active {
+          background-color: #f2f2f2;
+        }
       </style>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -183,7 +198,23 @@ async function generateHTML1(rData1, label, rData2) {
           chart1.draw(google.visualization.arrayToDataTable([${chartData11String}]), { title: 'OverAll Latency',});
           chart2.draw(google.visualization.arrayToDataTable([${chartData21String}]), {title: 'ClientSide Latency'});
           chart3.draw(google.visualization.arrayToDataTable([${chartData31String}]), {title: 'ServerSide Latency'});
-         
+        }
+        function showTab(tabId) {
+          var tabs = document.querySelectorAll('.table-container');
+          tabs.forEach(function(tab) {
+            tab.style.display = 'none';
+          });
+    
+          var tabButtons = document.querySelectorAll('.tab');
+          tabButtons.forEach(function(button) {
+            button.classList.remove('active');
+          });
+    
+          var selectedTab = document.getElementById(tabId);
+          if (selectedTab) {
+            selectedTab.style.display = 'block';
+            document.getElementById(tabId + '-button').classList.add('active');
+          }
         }
       </script>
     </head>
@@ -194,10 +225,15 @@ async function generateHTML1(rData1, label, rData2) {
       <div id="chart1" class="chart"></div>
       <div id="chart2" class="chart"></div>
       <div id="chart3" class="chart"></div>
-    </div>`;
+    </div>
+    <div class="tab-container">
+    <!-- Tabs for switching between charts and the table -->
+    <div id="table1-button" class="tab active" onclick="showTab('table1')">Network API Logs</div>
+    <div id="table2-button" class="tab" onclick="showTab('table2')">Duplicate API Calls</div>
+  </div>`;
   htmlContent += `
-    <div id="table2" class="table-container">
-        <table id="dynamic-table2">
+  <div id="table1" class="table-container">
+  <table id="dynamic-table1">
           <thead>
             <tr>
               <th>Flow</th>
@@ -210,6 +246,8 @@ async function generateHTML1(rData1, label, rData2) {
           <tbody>
     `; 
   const data1 = new Map(rData1);
+
+  const duplicateAPI = new MapWithOrderedKeys();
 
   for (let i = 1; i < data1.size; i++) {
 
@@ -244,6 +282,8 @@ async function generateHTML1(rData1, label, rData2) {
     if (typeof valueMap1.split(":::")[5] !== 'undefined') {
       response = valueMap1.split(":::")[5]
     }
+    const count = await duplicateAPI.get(url+" ::: "+flow) ?? 0;
+    await duplicateAPI.set(url+" ::: "+flow, count + 1);
 
     htmlContent += `
         <tr>
@@ -255,10 +295,51 @@ async function generateHTML1(rData1, label, rData2) {
         </tr>
       `;
   }
+
   htmlContent += `
   </tbody>
 </table>
 </div>
+<div id="table2" class="table-container">
+<table id="dynamic-table1">
+          <thead>
+            <tr>
+              <th>Flow</th>
+              <th>End Point</th>
+              <th>Duplicate Count(s)</th>
+            </tr>
+          </thead>
+          <tbody>`
+  const getDuplicate = new Map(duplicateAPI);
+  
+  for (var entry of getDuplicate.entries()) {
+    let key = entry[0].toString();
+    let value = entry[1];
+
+  let dflow ;
+  let dendPoint;
+  let dvalueMap1;
+
+  if (typeof key !== 'undefined') {
+        dvalueMap1 = key;
+  }
+  if (typeof dvalueMap1.split(":::")[1] !== 'undefined') {
+    dflow = dvalueMap1.split(":::")[1];
+ }
+ if (typeof dvalueMap1.split(":::")[0] !== 'undefined') {
+   dendPoint = dvalueMap1.split(":::")[0];
+ }
+          htmlContent += `
+          <tr>
+            <td>${dflow}</td>
+            <td>${dendPoint}</td>
+            <td>${value}</td>
+          </tr>
+        `;
+ }
+ htmlContent +=`</tbody>
+ </table>
+ </div>
 </body>
 </html>
 `;
@@ -778,7 +859,7 @@ async function generateHTML(sessionTag, sessionTag1) {
       let requestSize = value.split(":::")[3];
       let responseSize = value.split(":::")[4];
       if (parseInt(key) > start && endTime < end) {
-        if ((url.includes('discomax') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN'))  && !url.includes('events') && !url.includes('telegraph') &&!url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co')&& !url.includes('pug000')&& !url.includes('cdn.cookielaw')&&!url.includes('yahoo')) {
+        if ((url.includes('discomax') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN'))  && !url.includes('events') && !url.includes('telegraph') &&!url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co')&& !url.includes('pug000')&& !url.includes('cdn.cookielaw')&&!url.includes('yahoo') && !url.includes('json')) {
           count++;
           rData1.set(count, "Flow ::: " + flow + " ::: " + url + ":::" + duration + ":::" + requestSize + ":::" + responseSize);
           rData3.set1(flow,duration);
@@ -800,7 +881,7 @@ async function generateHTML(sessionTag, sessionTag1) {
       let requestSize = value.split(":::")[3];
       let responseSize = value.split(":::")[4];
       if (parseInt(key) > start && endTime < end) {
-        if ((url.includes('discomax') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN'))  && !url.includes('events') && !url.includes('telegraph') &&!url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co')&& !url.includes('pug000')&& !url.includes('cdn.cookielaw')&&!url.includes('yahoo')) {
+        if ((url.includes('discomax') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN'))  && !url.includes('events') && !url.includes('telegraph') &&!url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co')&& !url.includes('pug000')&& !url.includes('cdn.cookielaw')&&!url.includes('yahoo')&&!url.includes('json')) {
           count2++;
           rData2.set(count2, "Flow ::: " + flow + " ::: " + url + ":::" + duration + ":::" + requestSize + ":::" + responseSize);
           rData4.set1(flow,duration);
