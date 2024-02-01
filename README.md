@@ -9,7 +9,8 @@ port: 3000
 
 http://localhost:3000
 
-<img width="1510" alt="Screenshot 2023-08-02 at 9 18 49 AM" src="https://github.com/sabharanikumar/ALES/assets/119396551/b88dca59-d807-40e1-9ae4-0aeed6927e38">
+<img width="1792" alt="Screenshot 2024-01-31 at 5 01 03 PM" src="https://github.com/sabharanikumar/ALES/assets/119396551/6a0c5f96-af28-4ff6-9439-643c08ad8f95">
+//github.com/sabharanikumar/ALES/assets/119396551/b88dca59-d807-40e1-9ae4-0aeed6927e38">
 
 # Output:
 
