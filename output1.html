@@ -1,571 +1,1114 @@
-
-    
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="en">
     <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Dynamic Table</title>
       <style>
-      body {
+        body {
           font-family: Arial, sans-serif;
-          margin: 0;
-          padding: 0;
-          background-color: #f4f4f4;
+          line-height: 1.6;
+          color: #333;
+          margin: 20px;
         }
-
         table {
           width: 100%;
           max-width: 100%;
+          margin: 0 auto;
+          font-size: 18px;
+          border-collapse: collapse;
         }
-
-        .table-container {
-max-width: 100%;
-overflow-x: auto;
-margin: 50px auto;
-background-color: white;
-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-border-radius: 8px;
-overflow: hidden;
-}
-        
-        
-        table { 
-          margin-left: auto; 
-          margin-right: auto; 
-          font-size: 20px; 
-          height: 100%; 
-          table-layout: fixed; 
-      } 
-
-      td { 
-          border: 1px solid black; 
-          text-align: center; 
-          padding: 10px; 
-      } 
-        
+    
         th, td {
+          border: 1px solid #ddd;
           padding: 15px;
           text-align: left;
-          border-bottom: 1px solid #ddd;
-          word-wrap: break-word;
+          word-wrap: break-word; /* Allow text to break into the next line */
+          max-width: 200px; /* Set your desired max-width for the table cells */
+          overflow: hidden;
         }
-        
+    
         th {
           background-color: #f2f2f2;
         }
-        
+    
         tbody tr:hover {
           background-color: #f5f5f5;
         }
-        
-        @media only screen and (max-width: 600px) {
-          /* Add styles for smaller screens */
-          th, td {
-            padding: 10px;
-          }
+    
+        .chart-container {
+          text-align: center;
+          margin-top: 10px;
         }
-        
-        .progress-bar-container {
-          position: relative;
-          width: 100%;
-          height: 20px;
-          background-color: #e0e0e0;
-          border-radius: 4px;
-          overflow: hidden;
+    
+        .chart {
+          width: 400px;
+          height: 300px;
+          display: inline-block;
+          margin: 10px;
         }
-        
-        .progress-bar {
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 100%;
-          background-color: #4caf50;
-          transition: width 0.3s ease;
+        .tab-container {
+          display: flex;
+          align-items: center;
         }
-        
-        .tooltip {
-          position: absolute;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          background-color: #333;
-          color: #fff;
-          padding: 5px;
-          border-radius: 4px;
-          display: none;
+    
+        .tab {
+          cursor: pointer;
+          padding: 10px;
+          border: 1px solid #ddd;
         }
-        
-        .progress-bar-container:hover .tooltip {
-          display: block;
+    
+        .tab:hover,
+        .tab.active {
+          background-color: #f2f2f2;
         }
       </style>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Dynamic Google Pie Charts</title>
+      <!-- Load Google Charts API -->
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawCharts);
+        function drawCharts() {var chart1 = new google.visualization.PieChart(document.getElementById('chart1'));
+          var chart2 = new google.visualization.PieChart(document.getElementById('chart2'));
+          var chart3 = new google.visualization.PieChart(document.getElementById('chart3'));
+
+          chart1.draw(google.visualization.arrayToDataTable([["CUJ","Latency"],["Launch Page",265337],["Profile Selector Page",10071],["Home Page",7973],["Search Page",1443],["Search Result Page",2411],["Shows Page",2076],["Video Page Old",1526],["News Page",1471],["Live News VST Old",3912]]), { title: 'OverAll Latency',});
+          chart2.draw(google.visualization.arrayToDataTable([["CUJ","Latency"],["Launch Page",3557],["Profile Selector Page",4227],["Home Page",7432],["Search Page",382],["Search Result Page",947],["Shows Page",731],["Video Page Old",1214],["News Page",722],["Live News VST Old",827]]), {title: 'ClientSide Latency'});
+          chart3.draw(google.visualization.arrayToDataTable([["CUJ","Latency"],["Launch Page",261780],["Profile Selector Page",5844],["Home Page",541],["Search Page",1061],["Search Result Page",1464],["Shows Page",1345],["Video Page Old",312],["News Page",749],["Live News VST Old",3085]]), {title: 'ServerSide Latency'});
+        }
+        function showTab(tabId) {
+          var tabs = document.querySelectorAll('.table-container');
+          tabs.forEach(function(tab) {
+            tab.style.display = 'none';
+          });
+    
+          var tabButtons = document.querySelectorAll('.tab');
+          tabButtons.forEach(function(button) {
+            button.classList.remove('active');
+          });
+    
+          var selectedTab = document.getElementById(tabId);
+          if (selectedTab) {
+            selectedTab.style.display = 'block';
+            document.getElementById(tabId + '-button').classList.add('active');
+          }
+        }
+      </script>
     </head>
     <body>
-      <div class="table-container">
-        <table id="dynamic-table">
+    <h2 style="text-align: center;"> CX PERFORMANCE ANALYSIS REPORT</h2>
+    <!-- Upper part with three dynamic Google Pie Charts -->
+    <div class="chart-container">
+      <div id="chart1" class="chart"></div>
+      <div id="chart2" class="chart"></div>
+      <div id="chart3" class="chart"></div>
+    </div>
+    <div class="tab-container">
+    <!-- Tabs for switching between charts and the table -->
+    <div id="table1-button" class="tab active" onclick="showTab('table1')">Network API Logs</div>
+    <div id="table2-button" class="tab" onclick="showTab('table2')">Duplicate API Calls</div>
+  </div>
+  <div id="table1" class="table-container">
+  <table id="dynamic-table1">
           <thead>
             <tr>
               <th>Flow</th>
               <th>End Point</th>
-              <th>Latency "6f023d1e-6f1f-11ee-85d5-02fdcab8dac7"</th>
+              <th>Request Payload Size(Bytes)</th>
+              <th>Response Payload Size(Bytes)</th>
+              <th>Latency"6f023d1e-6f1f-11ee-85d5-02fdcab8dac7"(ms)</th>
             </tr>
           </thead>
           <tbody>
     
         <tr>
           <td> Launch Page </td>
-          <td> https://default.stg.api.discomax.com/downloads-manager/any/downloads-manager/v1/user/downloads/active endpoint </td>
+          <td> https://default.stg.api.discomax.com/downloads-manager/any/downloads-manager/v1/user/downloads/active</td>
+          <td>700</td>
+          <td>281</td>
           <td>431</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://stg.api.discomax.com/session-context/headwaiter/v1/bootstrap endpoint </td>
+          <td> https://stg.api.discomax.com/session-context/headwaiter/v1/bootstrap</td>
+          <td>650</td>
+          <td>281</td>
           <td>570</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://default.stg.api.discomax.com/token?realm=bolt endpoint </td>
+          <td> https://default.stg.api.discomax.com/token?realm=bolt</td>
+          <td>714</td>
+          <td>6063</td>
           <td>701</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://cdn.branch.io/sdk/uriskiplist_v0.json endpoint </td>
-          <td>347</td>
-        </tr>
-      
-        <tr>
-          <td> Launch Page </td>
-          <td> https://default.stg.api.discomax.com/downloads-manager/any/downloads-manager/v1/user/downloads/active endpoint </td>
+          <td> https://default.stg.api.discomax.com/downloads-manager/any/downloads-manager/v1/user/downloads/active</td>
+          <td>6553</td>
+          <td>575</td>
           <td>141</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions endpoint </td>
+          <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions</td>
+          <td>6647</td>
+          <td>993</td>
           <td>125</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://stg.api.discomax.com/session-context/headwaiter/v1/bootstrap endpoint </td>
+          <td> https://stg.api.discomax.com/session-context/headwaiter/v1/bootstrap</td>
+          <td>6503</td>
+          <td>468</td>
           <td>84</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://default.stg.api.discomax.com/users/me?validateAccount=true endpoint </td>
+          <td> https://default.stg.api.discomax.com/users/me?validateAccount=true</td>
+          <td>6463</td>
+          <td>728</td>
           <td>152</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://default.stg.api.discomax.com/entitlements/userEntitlementsSummary/me endpoint </td>
+          <td> https://default.stg.api.discomax.com/entitlements/userEntitlementsSummary/me</td>
+          <td>6463</td>
+          <td>381</td>
           <td>68</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://default.stg.api.discomax.com/users/me/partners endpoint </td>
+          <td> https://default.stg.api.discomax.com/users/me/partners</td>
+          <td>6463</td>
+          <td>427</td>
           <td>150</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions?projectId=eee34681-a45b-42da-a487-81544dfbe620 endpoint </td>
+          <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions?projectId=eee34681-a45b-42da-a487-81544dfbe620</td>
+          <td>6463</td>
+          <td>2586</td>
           <td>74</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://default.stg.api.discomax.com/legal/region endpoint </td>
+          <td> https://default.stg.api.discomax.com/legal/region</td>
+          <td>6527</td>
+          <td>406</td>
           <td>150</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://default.stg.api.discomax.com/legal/region endpoint </td>
+          <td> https://default.stg.api.discomax.com/legal/region</td>
+          <td>6527</td>
+          <td>406</td>
           <td>88</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://default.stg.api.discomax.com/legal/terms?filter%5Bkind.alias%5D=sell-share-data&filter%5Bkind.brandId%5D=beam&include=kind%2Cconsent&decorators=articleBodyRichText.richTextHtml endpoint </td>
+          <td> https://default.stg.api.discomax.com/legal/terms?filter%5Bkind.alias%5D=sell-share-data&filter%5Bkind.brandId%5D=beam&include=kind%2Cconsent&decorators=articleBodyRichText.richTextHtml</td>
+          <td>6567</td>
+          <td>1098</td>
           <td>98</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://default.stg.api.discomax.com/cms/configs/geoblock endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/configs/geoblock</td>
+          <td>6463</td>
+          <td>538</td>
           <td>83</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://default.stg.api.discomax.com/downloads-manager/any/downloads-manager/v1/user/downloads/active endpoint </td>
+          <td> https://default.stg.api.discomax.com/downloads-manager/any/downloads-manager/v1/user/downloads/active</td>
+          <td>6553</td>
+          <td>575</td>
           <td>169</td>
         </tr>
       
         <tr>
           <td> Launch Page </td>
-          <td> https://images.cdn.prd.api.discomax.com/2023%2F4%2F13%2F6464c054-300e-4800-815f-84e63545ca8c.png?w=400&p=true&q=85 endpoint </td>
+          <td> https://images.cdn.prd.api.discomax.com/2023%2F4%2F13%2F6464c054-300e-4800-815f-84e63545ca8c.png?w=400&p=true&q=85</td>
+          <td>204</td>
+          <td>7768</td>
           <td>473</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/users/arkose/data endpoint </td>
+          <td> https://default.stg.api.discomax.com/users/arkose/data</td>
+          <td>6699</td>
+          <td>815</td>
           <td>113</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions endpoint </td>
+          <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions</td>
+          <td>6647</td>
+          <td>993</td>
           <td>203</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://wbd-api.arkoselabs.com/cdn/fc/js/6af2c0d87b9879cbf3365be1a208293f84d37b1e/standard/funcaptcha_api.js?onload=loadChallenge endpoint </td>
+          <td> https://wbd-api.arkoselabs.com/cdn/fc/js/6af2c0d87b9879cbf3365be1a208293f84d37b1e/standard/funcaptcha_api.js?onload=loadChallenge</td>
+          <td>377</td>
+          <td>51712</td>
           <td>66</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://wbd-api.arkoselabs.com/cdn/fc/assets/ec-game-core/bootstrap/1.15.0/standard/sri.json endpoint </td>
-          <td>116</td>
-        </tr>
-      
-        <tr>
-          <td> Profile Selector Page </td>
-          <td> https://wbd-api.arkoselabs.com/cdn/fc/assets/ec-game-core/bootstrap/1.15.0/standard/game_core_bootstrap.js endpoint </td>
+          <td> https://wbd-api.arkoselabs.com/cdn/fc/assets/ec-game-core/bootstrap/1.15.0/standard/game_core_bootstrap.js</td>
+          <td>377</td>
+          <td>24547</td>
           <td>63</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/login endpoint </td>
+          <td> https://default.stg.api.discomax.com/login</td>
+          <td>7323</td>
+          <td>4396</td>
           <td>1426</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://stg.api.discomax.com/session-context/headwaiter/v1/bootstrap endpoint </td>
+          <td> https://stg.api.discomax.com/session-context/headwaiter/v1/bootstrap</td>
+          <td>6709</td>
+          <td>468</td>
           <td>128</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/entitlements/userEntitlementsSummary/me endpoint </td>
+          <td> https://default.stg.api.discomax.com/entitlements/userEntitlementsSummary/me</td>
+          <td>6669</td>
+          <td>386</td>
           <td>107</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/users/me/partners endpoint </td>
+          <td> https://default.stg.api.discomax.com/users/me/partners</td>
+          <td>6669</td>
+          <td>427</td>
           <td>138</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions?projectId=eee34681-a45b-42da-a487-81544dfbe620 endpoint </td>
+          <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions?projectId=eee34681-a45b-42da-a487-81544dfbe620</td>
+          <td>6669</td>
+          <td>2589</td>
           <td>91</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/users/me?validateAccount=true endpoint </td>
+          <td> https://default.stg.api.discomax.com/users/me?validateAccount=true</td>
+          <td>6669</td>
+          <td>870</td>
           <td>167</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/users/me/profiles endpoint </td>
+          <td> https://default.stg.api.discomax.com/users/me/profiles</td>
+          <td>6669</td>
+          <td>1507</td>
           <td>226</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/legal/region endpoint </td>
+          <td> https://default.stg.api.discomax.com/legal/region</td>
+          <td>6733</td>
+          <td>406</td>
           <td>162</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/legal/region endpoint </td>
+          <td> https://default.stg.api.discomax.com/legal/region</td>
+          <td>6733</td>
+          <td>406</td>
           <td>80</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/legal/terms?decorators=articleBodyRichText.richTextHtml&include=kind%2Cconsent&filter%5Bkind.brandId%5D=beam endpoint </td>
+          <td> https://default.stg.api.discomax.com/legal/terms?decorators=articleBodyRichText.richTextHtml&include=kind%2Cconsent&filter%5Bkind.brandId%5D=beam</td>
+          <td>6773</td>
+          <td>2752</td>
           <td>258</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/cms/configs/geoblock endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/configs/geoblock</td>
+          <td>6669</td>
+          <td>538</td>
           <td>170</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/users/registration/hasPasswordSet endpoint </td>
+          <td> https://default.stg.api.discomax.com/users/registration/hasPasswordSet</td>
+          <td>6669</td>
+          <td>434</td>
           <td>221</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/downloads-manager/any/downloads-manager/v1/user/downloads/active endpoint </td>
+          <td> https://default.stg.api.discomax.com/downloads-manager/any/downloads-manager/v1/user/downloads/active</td>
+          <td>6759</td>
+          <td>575</td>
           <td>276</td>
         </tr>
       
         <tr>
           <td> Profile Selector Page </td>
-          <td> https://default.stg.api.discomax.com/users/me/profiles endpoint </td>
+          <td> https://default.stg.api.discomax.com/users/me/profiles</td>
+          <td>6669</td>
+          <td>1507</td>
           <td>332</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/users/me/profiles/switchProfile endpoint </td>
+          <td> https://default.stg.api.discomax.com/users/me/profiles/switchProfile</td>
+          <td>6863</td>
+          <td>894</td>
           <td>474</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://stg.api.discomax.com/session-context/headwaiter/v1/bootstrap endpoint </td>
+          <td> https://stg.api.discomax.com/session-context/headwaiter/v1/bootstrap</td>
+          <td>6709</td>
+          <td>468</td>
           <td>75</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/users/me?validateAccount=true endpoint </td>
+          <td> https://default.stg.api.discomax.com/users/me?validateAccount=true</td>
+          <td>6669</td>
+          <td>870</td>
           <td>179</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/users/me/partners endpoint </td>
+          <td> https://default.stg.api.discomax.com/users/me/partners</td>
+          <td>6669</td>
+          <td>427</td>
           <td>134</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions?projectId=eee34681-a45b-42da-a487-81544dfbe620 endpoint </td>
+          <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions?projectId=eee34681-a45b-42da-a487-81544dfbe620</td>
+          <td>6669</td>
+          <td>2589</td>
           <td>139</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/entitlements/userEntitlementsSummary/me endpoint </td>
+          <td> https://default.stg.api.discomax.com/entitlements/userEntitlementsSummary/me</td>
+          <td>6669</td>
+          <td>386</td>
           <td>122</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/users/me/profiles endpoint </td>
+          <td> https://default.stg.api.discomax.com/users/me/profiles</td>
+          <td>6669</td>
+          <td>1507</td>
           <td>90</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/legal/region endpoint </td>
+          <td> https://default.stg.api.discomax.com/legal/region</td>
+          <td>6733</td>
+          <td>406</td>
           <td>233</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/legal/region endpoint </td>
+          <td> https://default.stg.api.discomax.com/legal/region</td>
+          <td>6733</td>
+          <td>406</td>
           <td>157</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/legal/terms?decorators=articleBodyRichText.richTextHtml&include=kind%2Cconsent&filter%5Bkind.brandId%5D=beam endpoint </td>
+          <td> https://default.stg.api.discomax.com/legal/terms?decorators=articleBodyRichText.richTextHtml&include=kind%2Cconsent&filter%5Bkind.brandId%5D=beam</td>
+          <td>6773</td>
+          <td>2752</td>
           <td>89</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/cms/configs/geoblock endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/configs/geoblock</td>
+          <td>6669</td>
+          <td>538</td>
           <td>215</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/downloads-manager/any/downloads-manager/v1/user/downloads/active endpoint </td>
+          <td> https://default.stg.api.discomax.com/downloads-manager/any/downloads-manager/v1/user/downloads/active</td>
+          <td>6759</td>
+          <td>575</td>
           <td>79</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/cms/collections/mobile-menu-bar?include=default endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/collections/mobile-menu-bar?include=default</td>
+          <td>6669</td>
+          <td>2569</td>
           <td>206</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/tabbed-home?include=default&page%5Bitems.number%5D=1&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10 endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/tabbed-home?include=default&page%5Bitems.number%5D=1&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10</td>
+          <td>6669</td>
+          <td>3825</td>
           <td>106</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/movies?decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10&include=default&page%5Bitems.number%5D=1 endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/movies?decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10&include=default&page%5Bitems.number%5D=1</td>
+          <td>6669</td>
+          <td>71157</td>
           <td>1092</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/home?page%5Bitems.size%5D=10&page%5Bitems.number%5D=1&include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/home?page%5Bitems.size%5D=10&page%5Bitems.number%5D=1&include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images</td>
+          <td>6669</td>
+          <td>116005</td>
           <td>1249</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/series?page%5Bitems.number%5D=1&include=default&page%5Bitems.size%5D=10&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/series?page%5Bitems.number%5D=1&include=default&page%5Bitems.size%5D=10&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images</td>
+          <td>6669</td>
+          <td>121410</td>
           <td>960</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/channel/c0d1f27a-e2f8-4b3c-bf3c-ed0c4e258093?include=default&page%5Bitems.size%5D=10&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.number%5D=1 endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/channel/c0d1f27a-e2f8-4b3c-bf3c-ed0c4e258093?include=default&page%5Bitems.size%5D=10&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.number%5D=1</td>
+          <td>6669</td>
+          <td>192163</td>
           <td>1567</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://images.cdn.prd.api.discomax.com/c4a0/245af8155323.png endpoint </td>
+          <td> https://images.cdn.prd.api.discomax.com/c4a0/245af8155323.png</td>
+          <td>204</td>
+          <td>810</td>
           <td>35</td>
         </tr>
       
         <tr>
           <td> Home Page </td>
-          <td> https://default.stg.api.discomax.com/cms/collections/108021747658818729921285712437803929326?decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&include=default endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/collections/108021747658818729921285712437803929326?decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&include=default</td>
+          <td>6669</td>
+          <td>10751</td>
           <td>231</td>
         </tr>
       
         <tr>
           <td> Search Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/search?include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10&page%5Bitems.number%5D=1 endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/search?include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10&page%5Bitems.number%5D=1</td>
+          <td>6669</td>
+          <td>70313</td>
           <td>382</td>
         </tr>
       
         <tr>
           <td> Search Result Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/search/result?contentFilter%5Bquery%5D=Fr&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&include=default endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/search/result?contentFilter%5Bquery%5D=Fr&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&include=default</td>
+          <td>6669</td>
+          <td>44833</td>
           <td>369</td>
         </tr>
       
         <tr>
           <td> Search Result Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/search/result?contentFilter%5Bquery%5D=F&include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/search/result?contentFilter%5Bquery%5D=F&include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images</td>
+          <td>6669</td>
+          <td>47267</td>
           <td>508</td>
         </tr>
       
         <tr>
           <td> Search Result Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/search/result?include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&contentFilter%5Bquery%5D=Fri endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/search/result?include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&contentFilter%5Bquery%5D=Fri</td>
+          <td>6669</td>
+          <td>40281</td>
           <td>265</td>
         </tr>
       
         <tr>
           <td> Search Result Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/search/result?decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&contentFilter%5Bquery%5D=Frie&include=default endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/search/result?decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&contentFilter%5Bquery%5D=Frie&include=default</td>
+          <td>6669</td>
+          <td>52241</td>
           <td>876</td>
         </tr>
       
         <tr>
           <td> Search Result Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/search/result?decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&contentFilter%5Bquery%5D=Frien&include=default endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/search/result?decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&contentFilter%5Bquery%5D=Frien&include=default</td>
+          <td>6669</td>
+          <td>52201</td>
           <td>617</td>
         </tr>
       
         <tr>
           <td> Search Result Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/search/result?contentFilter%5Bquery%5D=Friends&include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/search/result?contentFilter%5Bquery%5D=Friends&include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images</td>
+          <td>6669</td>
+          <td>54479</td>
           <td>608</td>
         </tr>
       
         <tr>
           <td> Search Result Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/search/result?include=default&contentFilter%5Bquery%5D=Friend&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/search/result?include=default&contentFilter%5Bquery%5D=Friend&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images</td>
+          <td>6669</td>
+          <td>55834</td>
           <td>632</td>
         </tr>
       
         <tr>
           <td> Shows Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/show/52dae4c7-2ab1-4bb9-ab1c-8100fd54e2f9?page%5Bitems.number%5D=1&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10&include=default endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/show/52dae4c7-2ab1-4bb9-ab1c-8100fd54e2f9?page%5Bitems.number%5D=1&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10&include=default</td>
+          <td>6669</td>
+          <td>70370</td>
           <td>419</td>
         </tr>
       
         <tr>
           <td> Shows Page </td>
-          <td> https://default.stg.api.discomax.com/content/videos/52dae4c7-2ab1-4bb9-ab1c-8100fd54e2f9/activeVideoForShow?include=creditGroups%2Cedit%2Cedit.glyphs%2Cedit.glyphs.images%2Cimages%2Cratings%2Cratings.images%2CratingDescriptors%2CratingDescriptors.images%2Cseason%2Cshow%2Cshow.images%2Cshow.seasons%2Cshow.trailerVideo.edit%2CtaxonomyNodes%2CtaxonomyNodes.images&decorators=contentAction%2CviewingHistory endpoint </td>
+          <td> https://default.stg.api.discomax.com/content/videos/52dae4c7-2ab1-4bb9-ab1c-8100fd54e2f9/activeVideoForShow?include=creditGroups%2Cedit%2Cedit.glyphs%2Cedit.glyphs.images%2Cimages%2Cratings%2Cratings.images%2CratingDescriptors%2CratingDescriptors.images%2Cseason%2Cshow%2Cshow.images%2Cshow.seasons%2Cshow.trailerVideo.edit%2CtaxonomyNodes%2CtaxonomyNodes.images&decorators=contentAction%2CviewingHistory</td>
+          <td>6669</td>
+          <td>5641</td>
           <td>312</td>
         </tr>
       
         <tr>
           <td> Video Page Old </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/video/watch/5e91e9d9-08ad-4986-beeb-fe58901816af/2daadee8-b235-4072-b986-013011f496d8?include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.number%5D=1&page%5Bitems.size%5D=10 endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/video/watch/5e91e9d9-08ad-4986-beeb-fe58901816af/2daadee8-b235-4072-b986-013011f496d8?include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.number%5D=1&page%5Bitems.size%5D=10</td>
+          <td>6669</td>
+          <td>43443</td>
           <td>373</td>
         </tr>
       
         <tr>
           <td> Video Page Old </td>
-          <td> https://default.stg.api.discomax.com/playback-orchestrator/any/playback-orchestrator/v1/playbackInfo endpoint </td>
+          <td> https://default.stg.api.discomax.com/playback-orchestrator/any/playback-orchestrator/v1/playbackInfo</td>
+          <td>9883</td>
+          <td>2493</td>
           <td>459</td>
         </tr>
       
         <tr>
           <td> Video Page Old </td>
-          <td> https://default.stg.api.discomax.com/cms/recommendations/nextVideos?videoId=5e91e9d9-08ad-4986-beeb-fe58901816af&include=edit%2Cedit.glyphs%2Cedit.glyphs.images%2Cimages%2Cratings%2Cratings.images%2CratingDescriptors%2CratingDescriptors.images%2Cseason%2Cshow%2Cshow.images%2Cshow.seasons%2Cshow.trailerVideo.edit&algorithm=naturalOrder endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/recommendations/nextVideos?videoId=5e91e9d9-08ad-4986-beeb-fe58901816af&include=edit%2Cedit.glyphs%2Cedit.glyphs.images%2Cimages%2Cratings%2Cratings.images%2CratingDescriptors%2CratingDescriptors.images%2Cseason%2Cshow%2Cshow.images%2Cshow.seasons%2Cshow.trailerVideo.edit&algorithm=naturalOrder</td>
+          <td>6669</td>
+          <td>3694</td>
           <td>307</td>
         </tr>
       
         <tr>
           <td> Video Page Old </td>
-          <td> https://misc.hbomaxcdn.com/atv_certificates/hbo.file endpoint </td>
+          <td> https://misc.hbomaxcdn.com/atv_certificates/hbo.file</td>
+          <td>206</td>
+          <td>1828</td>
           <td>540</td>
         </tr>
       
         <tr>
           <td> Video Page Old </td>
-          <td> https://misc.hbomaxcdn.com/atv_certificates/hbo.file endpoint </td>
+          <td> https://misc.hbomaxcdn.com/atv_certificates/hbo.file</td>
+          <td>206</td>
+          <td>1828</td>
           <td>159</td>
         </tr>
       
         <tr>
           <td> News Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/sports?page%5Bitems.number%5D=1&include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10 endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/sports?page%5Bitems.number%5D=1&include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10</td>
+          <td>6669</td>
+          <td>26731</td>
           <td>380</td>
         </tr>
       
         <tr>
           <td> News Page </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/channel/c89faa25-539d-42f4-a45d-953c983f8b96?include=default&page%5Bitems.size%5D=10&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.number%5D=1 endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/channel/c89faa25-539d-42f4-a45d-953c983f8b96?include=default&page%5Bitems.size%5D=10&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.number%5D=1</td>
+          <td>6669</td>
+          <td>41892</td>
           <td>342</td>
         </tr>
       
         <tr>
           <td> Live News VST Old </td>
-          <td> https://default.stg.api.discomax.com/cms/routes/video/watch/f5c1c0e9-0916-55d8-801f-e629259ab0bc/0a46f6ef-7200-4ca3-97c4-c82c91aadee0?page%5Bitems.number%5D=1&page%5Bitems.size%5D=10&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&include=default endpoint </td>
+          <td> https://default.stg.api.discomax.com/cms/routes/video/watch/f5c1c0e9-0916-55d8-801f-e629259ab0bc/0a46f6ef-7200-4ca3-97c4-c82c91aadee0?page%5Bitems.number%5D=1&page%5Bitems.size%5D=10&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&include=default</td>
+          <td>6669</td>
+          <td>23973</td>
           <td>158</td>
         </tr>
       
         <tr>
           <td> Live News VST Old </td>
-          <td> https://default.stg.api.discomax.com/playback-orchestrator/any/playback-orchestrator/v1/playbackInfo endpoint </td>
+          <td> https://default.stg.api.discomax.com/playback-orchestrator/any/playback-orchestrator/v1/playbackInfo</td>
+          <td>9904</td>
+          <td>1594</td>
           <td>554</td>
         </tr>
       
-            </tbody>
-          </table>
-        </div>
-      </body>
-      </html>
-    
+  </tbody>
+</table>
+</div>
+<div id="table2" class="table-container">
+<table id="dynamic-table1">
+          <thead>
+            <tr>
+              <th>Flow</th>
+              <th>End Point</th>
+              <th>Duplicate Count(s)</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>  Launch Page </td>
+            <td> https://default.stg.api.discomax.com/downloads-manager/any/downloads-manager/v1/user/downloads/active </td>
+            <td>3</td>
+          </tr>
+        
+          <tr>
+            <td>  Launch Page </td>
+            <td> https://stg.api.discomax.com/session-context/headwaiter/v1/bootstrap </td>
+            <td>2</td>
+          </tr>
+        
+          <tr>
+            <td>  Launch Page </td>
+            <td> https://default.stg.api.discomax.com/token?realm=bolt </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Launch Page </td>
+            <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Launch Page </td>
+            <td> https://default.stg.api.discomax.com/users/me?validateAccount=true </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Launch Page </td>
+            <td> https://default.stg.api.discomax.com/entitlements/userEntitlementsSummary/me </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Launch Page </td>
+            <td> https://default.stg.api.discomax.com/users/me/partners </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Launch Page </td>
+            <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions?projectId=eee34681-a45b-42da-a487-81544dfbe620 </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Launch Page </td>
+            <td> https://default.stg.api.discomax.com/legal/region </td>
+            <td>2</td>
+          </tr>
+        
+          <tr>
+            <td>  Launch Page </td>
+            <td> https://default.stg.api.discomax.com/legal/terms?filter%5Bkind.alias%5D=sell-share-data&filter%5Bkind.brandId%5D=beam&include=kind%2Cconsent&decorators=articleBodyRichText.richTextHtml </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Launch Page </td>
+            <td> https://default.stg.api.discomax.com/cms/configs/geoblock </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Launch Page </td>
+            <td> https://images.cdn.prd.api.discomax.com/2023%2F4%2F13%2F6464c054-300e-4800-815f-84e63545ca8c.png?w=400&p=true&q=85 </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://default.stg.api.discomax.com/users/arkose/data </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://wbd-api.arkoselabs.com/cdn/fc/js/6af2c0d87b9879cbf3365be1a208293f84d37b1e/standard/funcaptcha_api.js?onload=loadChallenge </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://wbd-api.arkoselabs.com/cdn/fc/assets/ec-game-core/bootstrap/1.15.0/standard/game_core_bootstrap.js </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://default.stg.api.discomax.com/login </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://stg.api.discomax.com/session-context/headwaiter/v1/bootstrap </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://default.stg.api.discomax.com/entitlements/userEntitlementsSummary/me </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://default.stg.api.discomax.com/users/me/partners </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions?projectId=eee34681-a45b-42da-a487-81544dfbe620 </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://default.stg.api.discomax.com/users/me?validateAccount=true </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://default.stg.api.discomax.com/users/me/profiles </td>
+            <td>2</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://default.stg.api.discomax.com/legal/region </td>
+            <td>2</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://default.stg.api.discomax.com/legal/terms?decorators=articleBodyRichText.richTextHtml&include=kind%2Cconsent&filter%5Bkind.brandId%5D=beam </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://default.stg.api.discomax.com/cms/configs/geoblock </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://default.stg.api.discomax.com/users/registration/hasPasswordSet </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Profile Selector Page </td>
+            <td> https://default.stg.api.discomax.com/downloads-manager/any/downloads-manager/v1/user/downloads/active </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/users/me/profiles/switchProfile </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://stg.api.discomax.com/session-context/headwaiter/v1/bootstrap </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/users/me?validateAccount=true </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/users/me/partners </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/labs/api/v1/sessions/feature-flags/decisions?projectId=eee34681-a45b-42da-a487-81544dfbe620 </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/entitlements/userEntitlementsSummary/me </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/users/me/profiles </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/legal/region </td>
+            <td>2</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/legal/terms?decorators=articleBodyRichText.richTextHtml&include=kind%2Cconsent&filter%5Bkind.brandId%5D=beam </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/cms/configs/geoblock </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/downloads-manager/any/downloads-manager/v1/user/downloads/active </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/cms/collections/mobile-menu-bar?include=default </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/tabbed-home?include=default&page%5Bitems.number%5D=1&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10 </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/movies?decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10&include=default&page%5Bitems.number%5D=1 </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/home?page%5Bitems.size%5D=10&page%5Bitems.number%5D=1&include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/series?page%5Bitems.number%5D=1&include=default&page%5Bitems.size%5D=10&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/channel/c0d1f27a-e2f8-4b3c-bf3c-ed0c4e258093?include=default&page%5Bitems.size%5D=10&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.number%5D=1 </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://images.cdn.prd.api.discomax.com/c4a0/245af8155323.png </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Home Page </td>
+            <td> https://default.stg.api.discomax.com/cms/collections/108021747658818729921285712437803929326?decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&include=default </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Search Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/search?include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10&page%5Bitems.number%5D=1 </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Search Result Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/search/result?contentFilter%5Bquery%5D=Fr&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&include=default </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Search Result Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/search/result?contentFilter%5Bquery%5D=F&include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Search Result Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/search/result?include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&contentFilter%5Bquery%5D=Fri </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Search Result Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/search/result?decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&contentFilter%5Bquery%5D=Frie&include=default </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Search Result Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/search/result?decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&contentFilter%5Bquery%5D=Frien&include=default </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Search Result Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/search/result?contentFilter%5Bquery%5D=Friends&include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Search Result Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/search/result?include=default&contentFilter%5Bquery%5D=Friend&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Shows Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/show/52dae4c7-2ab1-4bb9-ab1c-8100fd54e2f9?page%5Bitems.number%5D=1&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10&include=default </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Shows Page </td>
+            <td> https://default.stg.api.discomax.com/content/videos/52dae4c7-2ab1-4bb9-ab1c-8100fd54e2f9/activeVideoForShow?include=creditGroups%2Cedit%2Cedit.glyphs%2Cedit.glyphs.images%2Cimages%2Cratings%2Cratings.images%2CratingDescriptors%2CratingDescriptors.images%2Cseason%2Cshow%2Cshow.images%2Cshow.seasons%2Cshow.trailerVideo.edit%2CtaxonomyNodes%2CtaxonomyNodes.images&decorators=contentAction%2CviewingHistory </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Video Page Old </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/video/watch/5e91e9d9-08ad-4986-beeb-fe58901816af/2daadee8-b235-4072-b986-013011f496d8?include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.number%5D=1&page%5Bitems.size%5D=10 </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Video Page Old </td>
+            <td> https://default.stg.api.discomax.com/playback-orchestrator/any/playback-orchestrator/v1/playbackInfo </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Video Page Old </td>
+            <td> https://default.stg.api.discomax.com/cms/recommendations/nextVideos?videoId=5e91e9d9-08ad-4986-beeb-fe58901816af&include=edit%2Cedit.glyphs%2Cedit.glyphs.images%2Cimages%2Cratings%2Cratings.images%2CratingDescriptors%2CratingDescriptors.images%2Cseason%2Cshow%2Cshow.images%2Cshow.seasons%2Cshow.trailerVideo.edit&algorithm=naturalOrder </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Video Page Old </td>
+            <td> https://misc.hbomaxcdn.com/atv_certificates/hbo.file </td>
+            <td>2</td>
+          </tr>
+        
+          <tr>
+            <td>  News Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/sports?page%5Bitems.number%5D=1&include=default&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.size%5D=10 </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  News Page </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/channel/c89faa25-539d-42f4-a45d-953c983f8b96?include=default&page%5Bitems.size%5D=10&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&page%5Bitems.number%5D=1 </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Live News VST Old </td>
+            <td> https://default.stg.api.discomax.com/cms/routes/video/watch/f5c1c0e9-0916-55d8-801f-e629259ab0bc/0a46f6ef-7200-4ca3-97c4-c82c91aadee0?page%5Bitems.number%5D=1&page%5Bitems.size%5D=10&decorators=articleBodyRichText.richTextHtml%2CisFavorite%2CviewingHistory%2Cbadges%2Cratings%2CratingDescriptors%2Cedit%2CcontentAction%2CcreditGroups%2Cedit.glyphs%2Cedit.glyphs.images&include=default </td>
+            <td>1</td>
+          </tr>
+        
+          <tr>
+            <td>  Live News VST Old </td>
+            <td> https://default.stg.api.discomax.com/playback-orchestrator/any/playback-orchestrator/v1/playbackInfo </td>
+            <td>1</td>
+          </tr>
+        </tbody>
+ </table>
+ </div>
+</body>
+</html>
