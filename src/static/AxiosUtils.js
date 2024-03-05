@@ -485,7 +485,8 @@ async function generateHTML2(rData1, label1, label, rData) {
   const duplicateAPI = new MapWithOrderedKeys();
   const duplicateAPI1 = new MapWithOrderedKeys();
 
-  a: for (let i = 1; i < data1.size; i++) {
+  //In below loop, we get the API latency in N waterfall session vs same API latency in N-1vwaterfall session
+  for (let i = 1; i < data1.size; i++) {
 
     let valueMap1;
     let flow;
@@ -570,8 +571,6 @@ async function generateHTML2(rData1, label1, label, rData) {
     let url1;
     let flow1;
 
-
-
     if (typeof data3.get(k) !== 'undefined') {
       valueMap2 = data3.get(k);
     }
@@ -583,7 +582,6 @@ async function generateHTML2(rData1, label1, label, rData) {
     }
     const count1 = await duplicateAPI1.get(url1 + " ::: " + flow1) ?? 0;
     await duplicateAPI1.set(url1 + " ::: " + flow1, count1 + 1);
-
 
   }
   htmlContent += `
@@ -601,6 +599,8 @@ async function generateHTML2(rData1, label1, label, rData) {
             </tr>
           </thead>
           <tbody>`
+
+  // In below loop, we find the API with more than 1 count in N waterfall session vs same API count in N-1 waterfall session
   const getDuplicate = new Map(duplicateAPI);
   const getDuplicate1 = new Map(duplicateAPI1);
 
@@ -635,7 +635,6 @@ async function generateHTML2(rData1, label1, label, rData) {
         let dvalueMap2;
 
 
-        // if (value1 != 1) {
         if (typeof key1 !== 'undefined') {
           dvalueMap2 = key1;
         }
@@ -646,8 +645,6 @@ async function generateHTML2(rData1, label1, label, rData) {
           dendPoint1 = dvalueMap2.split(":::")[0];
         }
 
-
-
         if (dflow == dflow1) {
           if (dendPoint == dendPoint1) {
             flag = true;
@@ -655,16 +652,11 @@ async function generateHTML2(rData1, label1, label, rData) {
           }
 
         }
-        //}
 
       }
       if (flag) {
         value1 = valueT
       }
-
-
-
-
 
       htmlContent += `
           <tr>
