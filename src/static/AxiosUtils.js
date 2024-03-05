@@ -24,9 +24,9 @@ let login = 0, search = 0, videoPlayback = 0, adVidePlayback = 0, createProfile 
 
 /**
  * @author: sasikumar bharanikumar
- * @param {*} url 
- * @param {*} body 
- * @returns 
+ * @param {*} url
+ * @param {*} body
+ * @returns
  */
 async function invokeAgentPostCall(url, body) {
   let axiosResponse;
@@ -49,9 +49,9 @@ async function invokeAgentPostCall(url, body) {
 
 /**
  * @author: sasikumar bharanikumar
- * @param {*} url 
- * @param {*} body 
- * @returns 
+ * @param {*} url
+ * @param {*} body
+ * @returns
  */
 function mapToArray(dataMap) {
   var dataArray = [['CUJ', 'Latency']];
@@ -71,9 +71,9 @@ function calculatePercentage(value, maxValue) {
 
 /**
  * @author: sasikumar bharanikumar
- * @param {*} url 
- * @param {*} body 
- * @returns 
+ * @param {*} url
+ * @param {*} body
+ * @returns
  */
 async function generateHTML1(rData1, label, rData2) {
   // Your Map data
@@ -83,7 +83,7 @@ async function generateHTML1(rData1, label, rData2) {
   // Your maximum progress value
   const maxValue = 500;
 
-    let htmlContent = `<!DOCTYPE html>
+  let htmlContent = `<!DOCTYPE html>
     <html lang="en">
     <head>
       <style>
@@ -100,7 +100,7 @@ async function generateHTML1(rData1, label, rData2) {
           font-size: 18px;
           border-collapse: collapse;
         }
-    
+
         th, td {
           border: 1px solid #ddd;
           padding: 15px;
@@ -109,20 +109,20 @@ async function generateHTML1(rData1, label, rData2) {
           max-width: 200px; /* Set your desired max-width for the table cells */
           overflow: hidden;
         }
-    
+
         th {
           background-color: #f2f2f2;
         }
-    
+
         tbody tr:hover {
           background-color: #f5f5f5;
         }
-    
+
         .chart-container {
           text-align: center;
           margin-top: 10px;
         }
-    
+
         .chart {
           width: 400px;
           height: 300px;
@@ -133,13 +133,13 @@ async function generateHTML1(rData1, label, rData2) {
           display: flex;
           align-items: center;
         }
-    
+
         .tab {
           cursor: pointer;
           padding: 10px;
           border: 1px solid #ddd;
         }
-    
+
         .tab:hover,
         .tab.active {
           background-color: #f2f2f2;
@@ -155,43 +155,42 @@ async function generateHTML1(rData1, label, rData2) {
         google.charts.setOnLoadCallback(drawCharts);
         function drawCharts() {`;
 
-    const data2 = new Map(rData2);
-    var dataMap1 = {};
-    var dataMap2 = {};
-    var dataMap3 = {};
+  const data2 = new Map(rData2);
+  var dataMap1 = {};
+  var dataMap2 = {};
+  var dataMap3 = {};
 
-     data2.forEach((value,key)=>{
-      let result = value;
-      let serverSide = parseInt(result.split(":::")[2]);
-      let cuj = result.split(":::")[0];
-      let latency = parseInt(result.split(":::")[1]);
-      serverSide = Math.abs(serverSide);
-      if(serverSide > latency)
-      {
-        let temp = serverSide;
-        serverSide = latency;
-        latency = temp;
-      }
+  data2.forEach((value, key) => {
+    let result = value;
+    let serverSide = parseInt(result.split(":::")[2]);
+    let cuj = result.split(":::")[0];
+    let latency = parseInt(result.split(":::")[1]);
+    serverSide = Math.abs(serverSide);
+    if (serverSide > latency) {
+      let temp = serverSide;
+      serverSide = latency;
+      latency = temp;
+    }
     let clientSide = latency - serverSide;
-      dataMap1[cuj.toString()] = latency;
-      dataMap2[cuj.toString()] = clientSide;
-      dataMap3[cuj.toString()] = serverSide;
-     });
+    dataMap1[cuj.toString()] = latency;
+    dataMap2[cuj.toString()] = clientSide;
+    dataMap3[cuj.toString()] = serverSide;
+  });
 
-     var chartData11 = mapToArray(dataMap1);
-     var chartData21 = mapToArray(dataMap2);
-     var chartData31 = mapToArray(dataMap3);
+  var chartData11 = mapToArray(dataMap1);
+  var chartData21 = mapToArray(dataMap2);
+  var chartData31 = mapToArray(dataMap3);
 
-     var chartData11String = JSON.stringify(chartData11);
-     var chartData21String = JSON.stringify(chartData21);
-     var chartData31String = JSON.stringify(chartData31);
+  var chartData11String = JSON.stringify(chartData11);
+  var chartData21String = JSON.stringify(chartData21);
+  var chartData31String = JSON.stringify(chartData31);
 
-    chartData11String = chartData11String.slice(1, -1);
-    chartData21String = chartData21String.slice(1, -1);
-    chartData31String = chartData31String.slice(1, -1);
+  chartData11String = chartData11String.slice(1, -1);
+  chartData21String = chartData21String.slice(1, -1);
+  chartData31String = chartData31String.slice(1, -1);
 
-        htmlContent += 
-         `var chart1 = new google.visualization.PieChart(document.getElementById('chart1'));
+  htmlContent +=
+    `var chart1 = new google.visualization.PieChart(document.getElementById('chart1'));
           var chart2 = new google.visualization.PieChart(document.getElementById('chart2'));
           var chart3 = new google.visualization.PieChart(document.getElementById('chart3'));
 
@@ -204,12 +203,12 @@ async function generateHTML1(rData1, label, rData2) {
           tabs.forEach(function(tab) {
             tab.style.display = 'none';
           });
-    
+
           var tabButtons = document.querySelectorAll('.tab');
           tabButtons.forEach(function(button) {
             button.classList.remove('active');
           });
-    
+
           var selectedTab = document.getElementById(tabId);
           if (selectedTab) {
             selectedTab.style.display = 'block';
@@ -244,7 +243,7 @@ async function generateHTML1(rData1, label, rData2) {
             </tr>
           </thead>
           <tbody>
-    `; 
+    `;
   const data1 = new Map(rData1);
 
   const duplicateAPI = new MapWithOrderedKeys();
@@ -282,8 +281,8 @@ async function generateHTML1(rData1, label, rData2) {
     if (typeof valueMap1.split(":::")[5] !== 'undefined') {
       response = valueMap1.split(":::")[5]
     }
-    const count = await duplicateAPI.get(url+" ::: "+flow) ?? 0;
-    await duplicateAPI.set(url+" ::: "+flow, count + 1);
+    const count = await duplicateAPI.get(url + " ::: " + flow) ?? 0;
+    await duplicateAPI.set(url + " ::: " + flow, count + 1);
 
     htmlContent += `
         <tr>
@@ -311,33 +310,33 @@ async function generateHTML1(rData1, label, rData2) {
           </thead>
           <tbody>`
   const getDuplicate = new Map(duplicateAPI);
-  
+
   for (var entry of getDuplicate.entries()) {
     let key = entry[0].toString();
     let value = entry[1];
 
-  let dflow ;
-  let dendPoint;
-  let dvalueMap1;
+    let dflow;
+    let dendPoint;
+    let dvalueMap1;
 
-  if (typeof key !== 'undefined') {
-        dvalueMap1 = key;
-  }
-  if (typeof dvalueMap1.split(":::")[1] !== 'undefined') {
-    dflow = dvalueMap1.split(":::")[1];
- }
- if (typeof dvalueMap1.split(":::")[0] !== 'undefined') {
-   dendPoint = dvalueMap1.split(":::")[0];
- }
-          htmlContent += `
+    if (typeof key !== 'undefined') {
+      dvalueMap1 = key;
+    }
+    if (typeof dvalueMap1.split(":::")[1] !== 'undefined') {
+      dflow = dvalueMap1.split(":::")[1];
+    }
+    if (typeof dvalueMap1.split(":::")[0] !== 'undefined') {
+      dendPoint = dvalueMap1.split(":::")[0];
+    }
+    htmlContent += `
           <tr>
             <td>${dflow}</td>
             <td>${dendPoint}</td>
             <td>${value}</td>
           </tr>
         `;
- }
- htmlContent +=`</tbody>
+  }
+  htmlContent += `</tbody>
  </table>
  </div>
 </body>
@@ -346,11 +345,352 @@ async function generateHTML1(rData1, label, rData2) {
   return htmlContent;
 }
 
+
+/**
+ * @author: rakesh kumar
+ * @param {*} url
+ * @param {*} body
+ * @returns
+ */
+async function generateHTML2(rData1, label1, label, rData) {
+  // Your Map data
+
+  const test = JSON.stringify(label);
+  const test1 = JSON.stringify(label1);
+
+  // Your maximum progress value
+  const maxValue = 500;
+
+  let htmlContent = `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+          margin: 20px;
+        }
+        table {
+          width: 100%;
+          max-width: 100%;
+          margin: 0 auto;
+          font-size: 18px;
+          border-collapse: collapse;
+        }
+
+        th, td {
+          border: 1px solid #ddd;
+          padding: 15px;
+          text-align: left;
+          word-wrap: break-word; /* Allow text to break into the next line */
+          max-width: 200px; /* Set your desired max-width for the table cells */
+          overflow: hidden;
+        }
+
+        th {
+          background-color: #f2f2f2;
+        }
+
+        tbody tr:hover {
+          background-color: #f5f5f5;
+        }
+
+        .chart-container {
+          text-align: center;
+          margin-top: 10px;
+        }
+
+        .chart {
+          width: 400px;
+          height: 300px;
+          display: inline-block;
+          margin: 10px;
+        }
+        .tab-container {
+          display: flex;
+          align-items: center;
+        }
+
+        .tab {
+          cursor: pointer;
+          padding: 10px;
+          border: 1px solid #ddd;
+        }
+
+        .tab:hover,
+        .tab.active {
+          background-color: #f2f2f2;
+        }
+      </style>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Dynamic Google Pie Charts</title>
+      <!-- Load Google Charts API -->
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawCharts);
+        function drawCharts() {`;
+
+  htmlContent +=
+    `}
+        function showTab(tabId) {
+          var tabs = document.querySelectorAll('.table-container');
+          tabs.forEach(function(tab) {
+            tab.style.display = 'none';
+          });
+
+          var tabButtons = document.querySelectorAll('.tab');
+          tabButtons.forEach(function(button) {
+            button.classList.remove('active');
+          });
+
+          var selectedTab = document.getElementById(tabId);
+          if (selectedTab) {
+            selectedTab.style.display = 'block';
+            document.getElementById(tabId + '-button').classList.add('active');
+          }
+        }
+      </script>
+    </head>
+    <body>
+    <h2 style="text-align: center;"> CX PERFORMANCE ANALYSIS REPORT</h2>
+    <!-- Upper part with three dynamic Google Pie Charts -->
+    <div class="chart-container">
+      <div id="chart1" class="chart"></div>
+      <div id="chart2" class="chart"></div>
+      <div id="chart3" class="chart"></div>
+    </div>
+    <div class="tab-container">
+    <!-- Tabs for switching between charts and the table -->
+    <div id="table1-button" class="tab active" onclick="showTab('table1')">Network API Logs</div>
+    <div id="table2-button" class="tab" onclick="showTab('table2')">Duplicate API Calls</div>
+  </div>`;
+  htmlContent += `
+  <div id="table1" class="table-container">
+  <table id="dynamic-table1">
+          <thead>
+            <tr>
+              <th>Flow</th>
+              <th>End Point</th>
+              <th>Latency`+ test1 + `(ms)</th>
+              <th>Latency`+ test + `(ms)</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+  const data1 = new Map(rData1);
+
+  const duplicateAPI = new MapWithOrderedKeys();
+  const duplicateAPI1 = new MapWithOrderedKeys();
+
+  a: for (let i = 1; i < data1.size; i++) {
+
+    let valueMap1;
+    let flow;
+    let url;
+    let latency;
+
+    if (typeof data1.get(i) !== 'undefined') {
+      valueMap1 = data1.get(i);
+    }
+
+    if (typeof valueMap1.split(":::")[1] !== 'undefined') {
+      flow = valueMap1.split(":::")[1];
+    }
+
+    if (typeof valueMap1.split(":::")[2] !== 'undefined') {
+      url = valueMap1.split(":::")[2]
+    }
+
+
+    if (typeof valueMap1.split(":::")[3] !== 'undefined') {
+      latency = valueMap1.split(":::")[3]
+    }
+    const count = await duplicateAPI.get(url + " ::: " + flow) ?? 0;
+    await duplicateAPI.set(url + " ::: " + flow, count + 1);
+
+    const data3 = new Map(rData);
+    let latency1 = "NA";
+    let latencyT;
+    let flag = false;
+    for (let k = 1; k < data3.size; k++) {
+      let valueMap2;
+      let flow1;
+      let url1;
+
+
+
+      if (typeof data3.get(k) !== 'undefined') {
+        valueMap2 = data3.get(k);
+      }
+
+      if (typeof valueMap2.split(":::")[1] !== 'undefined') {
+        flow1 = valueMap2.split(":::")[1];
+      }
+
+      if (typeof valueMap2.split(":::")[2] !== 'undefined') {
+        url1 = valueMap2.split(":::")[2]
+      }
+      if (typeof valueMap2.split(":::")[3] !== 'undefined') {
+        latencyT = valueMap2.split(":::")[3]
+
+      }
+
+      if (flow == flow1) {
+        if (url == url1) {
+          flag = true;
+          break
+        }
+
+      }
+
+
+    }
+    if (flag) {
+      latency1 = latencyT
+    }
+
+    htmlContent += `
+      <tr>
+        <td>${flow}</td>
+        <td>${url}</td>
+        <td>${latency}</td>
+        <td>${latency1}</td>
+      </tr>
+    `;
+
+
+  }
+
+  const data3 = new Map(rData);
+  for (let k = 1; k < data3.size; k++) {
+    let valueMap2;
+    let url1;
+    let flow1;
+
+
+
+    if (typeof data3.get(k) !== 'undefined') {
+      valueMap2 = data3.get(k);
+    }
+    if (typeof valueMap2.split(":::")[2] !== 'undefined') {
+      url1 = valueMap2.split(":::")[2]
+    }
+    if (typeof valueMap2.split(":::")[1] !== 'undefined') {
+      flow1 = valueMap2.split(":::")[1];
+    }
+    const count1 = await duplicateAPI1.get(url1 + " ::: " + flow1) ?? 0;
+    await duplicateAPI1.set(url1 + " ::: " + flow1, count1 + 1);
+
+
+  }
+  htmlContent += `
+  </tbody>
+</table>
+</div>
+<div id="table2" class="table-container">
+<table id="dynamic-table1">
+          <thead>
+            <tr>
+              <th>Flow</th>
+              <th>End Point</th>
+              <th>Duplicate API Count(s) in`+ test1 + ` </th>
+              <th>API Count(s) in`+ test + ` </th>
+            </tr>
+          </thead>
+          <tbody>`
+  const getDuplicate = new Map(duplicateAPI);
+  const getDuplicate1 = new Map(duplicateAPI1);
+
+  for (var entry of getDuplicate.entries()) {
+    let key = entry[0].toString();
+    let value = entry[1];
+
+    let dflow;
+    let dendPoint;
+    let dvalueMap1;
+    if (value != 1) {
+      if (typeof key !== 'undefined') {
+        dvalueMap1 = key;
+      }
+      if (typeof dvalueMap1.split(":::")[1] !== 'undefined') {
+        dflow = dvalueMap1.split(":::")[1];
+      }
+      if (typeof dvalueMap1.split(":::")[0] !== 'undefined') {
+        dendPoint = dvalueMap1.split(":::")[0];
+      }
+
+
+      let flag = false;
+      let value1 = "NA"
+      let valueT
+      for (var entry1 of getDuplicate1.entries()) {
+        let key1 = entry1[0].toString();
+        valueT = entry1[1];
+
+        let dflow1;
+        let dendPoint1;
+        let dvalueMap2;
+
+
+        // if (value1 != 1) {
+        if (typeof key1 !== 'undefined') {
+          dvalueMap2 = key1;
+        }
+        if (typeof dvalueMap2.split(":::")[1] !== 'undefined') {
+          dflow1 = dvalueMap2.split(":::")[1];
+        }
+        if (typeof dvalueMap2.split(":::")[0] !== 'undefined') {
+          dendPoint1 = dvalueMap2.split(":::")[0];
+        }
+
+
+
+        if (dflow == dflow1) {
+          if (dendPoint == dendPoint1) {
+            flag = true;
+            break
+          }
+
+        }
+        //}
+
+      }
+      if (flag) {
+        value1 = valueT
+      }
+
+
+
+
+
+      htmlContent += `
+          <tr>
+            <td>${dflow}</td>
+            <td>${dendPoint}</td>
+            <td>${value}</td>
+            <td>${value1}</td>
+          </tr>
+        `;
+    }
+  }
+  htmlContent += `</tbody>
+ </table>
+ </div>
+</body>
+</html>
+`;
+  return htmlContent;
+}
+
+
 /**
  * @author: sasikumar bharanikumar
- * @param {*} url 
- * @param {*} body 
- * @returns 
+ * @param {*} url
+ * @param {*} body
+ * @returns
  */
 
 async function httpsInvoke(options = {}) {
@@ -376,9 +716,9 @@ async function httpsInvoke(options = {}) {
 
 /**
  * @author: sasikumar bharanikumar
- * @param {*} url 
- * @param {*} body 
- * @returns 
+ * @param {*} url
+ * @param {*} body
+ * @returns
  */
 async function replaceThrottleRequest(up, down, deviceId) {
   let payload1 = throttle;
@@ -399,7 +739,7 @@ async function replaceThrottleRequest(up, down, deviceId) {
 }
 
 /**Depth first search 0(V) time completixty to traversal nested JSON array.
- * 
+ *
  * @author: sasikumar Bharanikumar
  * @argument: json input file.
  * @type: Depth First Search and O(v) complexity
@@ -426,9 +766,9 @@ function traversal(arr, node) {
 
 /**
  * @author: sasikumar bharanikumar
- * @param {*} url 
- * @param {*} body 
- * @returns 
+ * @param {*} url
+ * @param {*} body
+ * @returns
  */
 async function getDeviceAddress(deviceID) {
   var responsebody;
@@ -455,9 +795,9 @@ async function getDeviceAddress(deviceID) {
 
 /**
  * @author: sasikumar bharanikumar
- * @param {*} url 
- * @param {*} body 
- * @returns 
+ * @param {*} url
+ * @param {*} body
+ * @returns
  */
 async function jsonValidator(jsonBody) {
   return JSON.parse(jsonBody.replace(/["]+/g, '').replace(/[']+/g, "\""));
@@ -508,9 +848,9 @@ async function profilerSwitch(input, deviceId) {
 
 /**
  * @author: sasikumar bharanikumar
- * @param {*} url 
- * @param {*} body 
- * @returns 
+ * @param {*} url
+ * @param {*} body
+ * @returns
  */
 async function replaceLockDeviceRequest(deviceId) {
   try {
@@ -635,9 +975,9 @@ async function analyticsBuilder() {
 
 /**
  * @author: sasikumar bharanikumar
- * @param {*} url 
- * @param {*} body 
- * @returns 
+ * @param {*} url
+ * @param {*} body
+ * @returns
  */
 async function footer() {
   const footer = "</body>" +
@@ -649,9 +989,9 @@ async function footer() {
 
 /**
  * @author: sasikumar bharanikumar
- * @param {*} url 
- * @param {*} body 
- * @returns 
+ * @param {*} url
+ * @param {*} body
+ * @returns
  */
 
 async function tableBody() {
@@ -706,7 +1046,7 @@ async function processCSV() {
     const stream = fs.createReadStream('./output.csv').pipe(csv());
 
     for await (const data of stream) {
-      mapi1.set(data.Start, data.End + ":::" + data.URL + ":::" + data.Duration+ ":::"+ data['Request Size']+ ":::"+ data['Response Size']);
+      mapi1.set(data.Start, data.End + ":::" + data.URL + ":::" + data.Duration + ":::" + data['Request Size'] + ":::" + data['Response Size']);
     }
     return mapi1;
   } catch (error) {
@@ -721,7 +1061,7 @@ async function processCSVD() {
     const stream = fs.createReadStream('./output1.csv').pipe(csv());
 
     for await (const data of stream) {
-      mapi1.set(data.Start, data.End + ":::" + data.URL + ":::" + data.Duration+ ":::"+ data['Request Size']+ ":::"+ data['Response Size']);
+      mapi1.set(data.Start, data.End + ":::" + data.URL + ":::" + data.Duration + ":::" + data['Request Size'] + ":::" + data['Response Size']);
     }
     return mapi1;
   } catch (error) {
@@ -729,8 +1069,7 @@ async function processCSVD() {
   }
 }
 
-async function overAllLatencyInCUJ(sessionId)
-{
+async function overAllLatencyInCUJ(sessionId) {
   const url = "https://ff60cdf18dc841559ada504885bc6118@api-dev.headspin.io/v0/sessions/analysis/pageloadtime/" + sessionId;
   let json1 = await getCUJDetails(sessionId);
   const dataMap = new MapWithOrderedKeys();
@@ -746,42 +1085,38 @@ async function overAllLatencyInCUJ(sessionId)
   return dataMap;
 }
 
-async function getClientSideLatencyInSeconds(map1, map2)
-{
+async function getClientSideLatencyInSeconds(map1, map2) {
   const rData4 = new MapWithOrderedKeys();
 
-  map1.forEach((value,key)=>{
-     if(map2.has(key))
-     {
-       const getLatency = parseInt(value) - parseInt(map2.get(key));
-       rData4.set(key,getLatency);
-     }
+  map1.forEach((value, key) => {
+    if (map2.has(key)) {
+      const getLatency = parseInt(value) - parseInt(map2.get(key));
+      rData4.set(key, getLatency);
+    }
   })
   return rData4;
 }
 
 
-async function getConsolidateLatency(map1, map2)
-{
-   const rData5 = new MapWithOrderedKeys();
-   map1.forEach((value,key)=>{
-      let flow = key;
-      let latency = value;
-      map2.forEach((value,key)=>{
-        if(key.includes(flow))
-        {
-          rData5.set(flow, flow+":::"+latency+":::"+value);
-        }
-      });
-   });
-   return rData5;
+async function getConsolidateLatency(map1, map2) {
+  const rData5 = new MapWithOrderedKeys();
+  map1.forEach((value, key) => {
+    let flow = key;
+    let latency = value;
+    map2.forEach((value, key) => {
+      if (key.includes(flow)) {
+        rData5.set(flow, flow + ":::" + latency + ":::" + value);
+      }
+    });
+  });
+  return rData5;
 }
 
 /**
  * @author: sasikumar bharanikumar
- * @param {*} url 
- * @param {*} body 
- * @returns 
+ * @param {*} url
+ * @param {*} body
+ * @returns
  */
 async function generateHTML(sessionTag, sessionTag1) {
   const session1 = await getCUJDetails(sessionTag);
@@ -859,10 +1194,10 @@ async function generateHTML(sessionTag, sessionTag1) {
       let requestSize = value.split(":::")[3];
       let responseSize = value.split(":::")[4];
       if (parseInt(key) > start && endTime < end) {
-        if ((url.includes('discomax') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN'))  && !url.includes('events') && !url.includes('telegraph') &&!url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co')&& !url.includes('pug000')&& !url.includes('cdn.cookielaw')&&!url.includes('yahoo') && !url.includes('json')) {
+        if ((url.includes('discomax') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN')) && !url.includes('events') && !url.includes('telegraph') && !url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co') && !url.includes('pug000') && !url.includes('cdn.cookielaw') && !url.includes('yahoo') && !url.includes('json')) {
           count++;
           rData1.set(count, "Flow ::: " + flow + " ::: " + url + ":::" + duration + ":::" + requestSize + ":::" + responseSize);
-          rData3.set1(flow,duration);
+          rData3.set1(flow, duration);
         }
       }
     }
@@ -881,25 +1216,26 @@ async function generateHTML(sessionTag, sessionTag1) {
       let requestSize = value.split(":::")[3];
       let responseSize = value.split(":::")[4];
       if (parseInt(key) > start && endTime < end) {
-        if ((url.includes('discomax') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN'))  && !url.includes('events') && !url.includes('telegraph') &&!url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co')&& !url.includes('pug000')&& !url.includes('cdn.cookielaw')&&!url.includes('yahoo')&&!url.includes('json')) {
+        if ((url.includes('discomax') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN')) && !url.includes('events') && !url.includes('telegraph') && !url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co') && !url.includes('pug000') && !url.includes('cdn.cookielaw') && !url.includes('yahoo') && !url.includes('json')) {
           count2++;
           rData2.set(count2, "Flow ::: " + flow + " ::: " + url + ":::" + duration + ":::" + requestSize + ":::" + responseSize);
-          rData4.set1(flow,duration);
+          rData4.set1(flow, duration);
         }
       }
     }
   }
-    
-  const result = await getClientSideLatencyInSeconds(new Map(seconds1),new Map(rData3));
-  const result1 = await getClientSideLatencyInSeconds(new Map(seconds2),new Map(rData4));
 
-  const fResult = await getConsolidateLatency(new Map(seconds1),new Map(result));
-  const fResult1 = await getConsolidateLatency(new Map(seconds2),new Map(result1));
-  
-  fs.writeFileSync('output1.html', await generateHTML1(rData1, sessionTag,fResult), 'utf-8');
-  fs.writeFileSync('output2.html', await generateHTML1(rData2, sessionTag1,fResult1), 'utf-8');
+  const result = await getClientSideLatencyInSeconds(new Map(seconds1), new Map(rData3));
+  const result1 = await getClientSideLatencyInSeconds(new Map(seconds2), new Map(rData4));
 
-  console.log("***** The execution is completed. Please check the output1.html and output2.html files for result *****");
+  const fResult = await getConsolidateLatency(new Map(seconds1), new Map(result));
+  const fResult1 = await getConsolidateLatency(new Map(seconds2), new Map(result1));
+
+  fs.writeFileSync('output1.html', await generateHTML1(rData1, sessionTag, fResult), 'utf-8');
+  fs.writeFileSync('output2.html', await generateHTML1(rData2, sessionTag1, fResult1), 'utf-8');
+  fs.writeFileSync('output3.html', await generateHTML2(rData2, sessionTag1, sessionTag, rData1), 'utf-8');
+
+  console.log("***** The execution is completed. Please check the output1.html, output2.html and output3.html files for result *****");
   //await analyticsBuilder();
   return myMap;
 }
