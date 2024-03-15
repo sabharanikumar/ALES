@@ -1186,7 +1186,7 @@ async function generateHTML(sessionTag, sessionTag1) {
       let requestSize = value.split(":::")[3];
       let responseSize = value.split(":::")[4];
       if (parseInt(key) > start && endTime < end) {
-        if ((url.includes('discomax') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN')) && !url.includes('events') && !url.includes('telegraph') && !url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co') && !url.includes('pug000') && !url.includes('cdn.cookielaw') && !url.includes('yahoo') && !url.includes('json')) {
+        if ((url.includes('discomax') || url.includes('max-tests.com') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN')) && !url.includes('events') && !url.includes('telegraph') && !url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co') && !url.includes('pug000') && !url.includes('cdn.cookielaw') && !url.includes('yahoo') && !url.includes('json')) {
           count++;
           rData1.set(count, "Flow ::: " + flow + " ::: " + url + ":::" + duration + ":::" + requestSize + ":::" + responseSize);
           rData3.set1(flow, duration);
@@ -1208,7 +1208,7 @@ async function generateHTML(sessionTag, sessionTag1) {
       let requestSize = value.split(":::")[3];
       let responseSize = value.split(":::")[4];
       if (parseInt(key) > start && endTime < end) {
-        if ((url.includes('discomax') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN')) && !url.includes('events') && !url.includes('telegraph') && !url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co') && !url.includes('pug000') && !url.includes('cdn.cookielaw') && !url.includes('yahoo') && !url.includes('json')) {
+        if ((url.includes('discomax') || url.includes('max-tests.com') || url.includes('max-next.com') || url.includes('hbomaxcdn') || url.includes('cdn') || url.includes('CDN')) && !url.includes('events') && !url.includes('telegraph') && !url.includes('pinterest') && !url.includes('google') && !url.includes('fls.doubleclick.net') && !url.includes('twitter') && !url.includes('https://t.co') && !url.includes('pug000') && !url.includes('cdn.cookielaw') && !url.includes('yahoo') && !url.includes('json')) {
           count2++;
           rData2.set(count2, "Flow ::: " + flow + " ::: " + url + ":::" + duration + ":::" + requestSize + ":::" + responseSize);
           rData4.set1(flow, duration);
