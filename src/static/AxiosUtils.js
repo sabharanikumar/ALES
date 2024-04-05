@@ -1005,7 +1005,7 @@ async function tableBody() {
 }
 
 async function getCUJDetails(sessionId) {
-  const url = "https://ff60cdf18dc841559ada504885bc6118@api-dev.headspin.io/v0/sessions/analysis/pageloadtime/" + sessionId;
+  const url = "https://ad1f809d87764b90a0a9a4bad0294825@api-dev.headspin.io/v0/sessions/" + sessionId + "/label/list?label_type=page-load-result&label_type=user";
   try {
     const response = await httpsInvoke({
       method: 'GET',
@@ -1022,10 +1022,13 @@ async function getCUJDetails(sessionId) {
 
 async function extractData(json) {
   const dataMap = new MapWithOrderedKeys();
-  for (let i = 0; i < json.page_load_regions.length; i++) {
-    const region = json.page_load_regions[i];
-    const key = region.request_name.trim();
-    const value = `start_Time:${region.request_start_time}:end_time:${region.request_end_time}`;
+  for (let i = 0; i < json.labels.length; i++) {
+    const labels = json.labels[i];
+    const key = labels.name.trim();
+    if (key.includes("Old")) {
+      continue;
+    }
+    const value = `start_Time:${labels.start_time}:end_time:${labels.end_time}`;
     dataMap.set(key, value);
   }
   return dataMap;
@@ -1062,14 +1065,17 @@ async function processCSVD() {
 }
 
 async function overAllLatencyInCUJ(sessionId) {
-  const url = "https://ff60cdf18dc841559ada504885bc6118@api-dev.headspin.io/v0/sessions/analysis/pageloadtime/" + sessionId;
+  const url = "https://ad1f809d87764b90a0a9a4bad0294825@api-dev.headspin.io/v0/sessions/" + sessionId + "/label/list?label_type=page-load-result&label_type=user";
   let json1 = await getCUJDetails(sessionId);
   const dataMap = new MapWithOrderedKeys();
-  for (let i = 0; i < json1.page_load_regions.length; i++) {
-    const region = json1.page_load_regions[i];
-    const key = region.request_name.trim();
-    const startTime = region.start_time;
-    const endTime = region.end_time;
+  for (let i = 0; i < json1.labels.length; i++) {
+    const labels = json1.labels[i];
+    const key = labels.name.trim();
+    if (key.includes("Old")) {
+      continue;
+    }
+    const startTime = labels.start_time;
+    const endTime = labels.end_time;
     const final = endTime - startTime;
     const value = final;
     dataMap.set(key, value);
