@@ -1025,9 +1025,6 @@ async function extractData(json) {
   for (let i = 0; i < json.labels.length; i++) {
     const labels = json.labels[i];
     const key = labels.name.trim();
-    if (key.includes("Old")) {
-      continue;
-    }
     const value = `start_Time:${labels.start_time}:end_time:${labels.end_time}`;
     dataMap.set(key, value);
   }
@@ -1071,9 +1068,6 @@ async function overAllLatencyInCUJ(sessionId) {
   for (let i = 0; i < json1.labels.length; i++) {
     const labels = json1.labels[i];
     const key = labels.name.trim();
-    if (key.includes("Old")) {
-      continue;
-    }
     const startTime = labels.start_time;
     const endTime = labels.end_time;
     const final = endTime - startTime;
